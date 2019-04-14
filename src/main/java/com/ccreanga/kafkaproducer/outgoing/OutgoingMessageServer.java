@@ -49,11 +49,12 @@ public class OutgoingMessageServer implements Runnable {
                 socket.setTcpNoDelay(true);
                 InputStream input = socket.getInputStream();
 
-
                 try {
                     threadPool.execute(() -> {
                         try {
+                            //keep the connection open unless close/not authorized
                             outgoingConnectionProcessor.handleConnection(socket);
+                            IOUtil.closeSocketPreventingReset(socket);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {

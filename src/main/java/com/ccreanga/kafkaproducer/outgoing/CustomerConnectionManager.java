@@ -6,10 +6,10 @@ import com.ccreanga.kafkaproducer.incoming.IncomingMessage;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import java.io.IOException;
+import java.io.OutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.net.Socket;
 import java.util.*;
 
@@ -18,16 +18,15 @@ public class CustomerConnectionManager {
 
     @Autowired
     private CustomerStorage customerStorage;
-
     private ListMultimap<Long, Socket> socketMap = ArrayListMultimap.create();
-
     private Map<Socket,Long> socketLastSend = new HashMap<>();
 
     public void sendMessageToCustomers(IncomingMessage message) throws IOException {
         List<Socket> sockets = socketMap.get(message.getMatchId());
-        for (Socket next : sockets) {
-            message.writeExternal(next.getOutputStream());
-            next.getOutputStream().flush();
+        for (Socket socket : sockets) {
+            OutputStream out = socket.getOutputStream();
+            message.writeExternal(out);
+            out.flush();
         }
     }
 
@@ -36,8 +35,15 @@ public class CustomerConnectionManager {
         for (Long matchId : matches) {
             socketMap.put(matchId, socket);
         }
-
     }
 
+
+    public void unregisterCustomerConnection(Socket socket){
+        Set<Long> keys = socketMap.keySet();
+        keys.forEach(k->{
+           List<Socket> sockets = socketMap.get(k);
+           sockets.remove(socket);
+        });
+    }
 
 }

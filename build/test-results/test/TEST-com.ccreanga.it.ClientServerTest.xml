@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ccreanga.it.ClientServerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-04-14T14:10:06" hostname="cornel-VirtualBox" time="0.127">
+  <properties/>
+  <testcase name="testNotAuthorized" classname="com.ccreanga.it.ClientServerTest" time="0.127"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

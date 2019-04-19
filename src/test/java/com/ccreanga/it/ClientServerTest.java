@@ -1,7 +1,7 @@
 package com.ccreanga.it;
 
-import com.ccreanga.kafkaproducer.outgoing.message.client.LoginMessage;
-import com.ccreanga.kafkaproducer.outgoing.message.server.LoginResultMessage;
+import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage;
 import java.io.IOException;
 import java.net.Socket;
 import static org.junit.Assert.*;

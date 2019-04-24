@@ -1,7 +1,13 @@
 package com.ccreanga.gameproxy.incoming;
 
-import com.ccreanga.gameproxy.CustomerConnectionManager;
+import com.ccreanga.gameproxy.CurrentSession;
+import com.ccreanga.gameproxy.Customer;
+import com.ccreanga.gameproxy.CustomerSession;
+import com.ccreanga.gameproxy.MessageDispatcher;
 import com.ccreanga.gameproxy.ServerConfig;
+import com.ccreanga.gameproxy.kafka.KafkaMessageProducer;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +23,13 @@ public class IncomingMessageServer implements Runnable {
     private ServerConfig serverConfig;
 
     @Autowired
-    private CustomerConnectionManager customerConnectionManager;
+    private CurrentSession currentSession;
+
+    @Autowired
+    MessageDispatcher messageDispatcher;
+
+    @Autowired
+    KafkaMessageProducer kafkaMessageProducer;
 
 
     private ServerSocket serverSocket = null;
@@ -31,9 +43,23 @@ public class IncomingMessageServer implements Runnable {
                 Socket clientSocket = serverSocket.accept();
                 InputStream input = clientSocket.getInputStream();
                 IncomingMessage message = IncomingMessage.readExternal(input);
-                customerConnectionManager.sendMessageToCustomers(message);
-                //List<String> topicManager.getTopics(message.getMatchId());
-
+                List<Customer> customers = messageDispatcher.getCustomers(message);
+                for (Customer customer : customers) {
+                    kafkaMessageProducer.sendAsynchToKafka(customer.getName(), message);
+                    CustomerSession customerSession = currentSession.getCustomerSession(customer);
+                    if (customerSession==null){
+                        //todo - handle offline case
+                    }else {
+                        ArrayBlockingQueue<IncomingMessage> queue = customerSession.getMessageQueues();
+                        if (queue != null) {
+                            try {
+                                queue.add(message);
+                            } catch (IllegalStateException e) {
+                                //todo - queue is full, handle this case
+                            }
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,12 @@
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: 10.0.2.15:32769
+      group-id: group-id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.LongSerializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer
+    producer:
+      bootstrap-servers: 10.0.2.15:32769
+      key-deserializer: org.apache.kafka.common.serialization.LongSerializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer

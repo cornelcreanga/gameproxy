@@ -12,16 +12,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SendData extends AbstractMessage{
 
-    private int secondsInterval;//go back in time
+    private long lastTimestamp;//go back in time
 
     public void writeExternal(OutputStream out) throws IOException {
-        out.write(secondsInterval);
+        out.write((int)(lastTimestamp >> 32));
+        out.write((int)lastTimestamp);
     }
 
     public static SendData readExternal(InputStream in) throws IOException {
         SendData m = new SendData();
         m.messageType = CLIENT_SEND_DATA;
-        m.secondsInterval = in.read();
+
+        int a,b;
+        a = in.read();
+        b = in.read();
+        m.lastTimestamp = (long)a << 32 | b & 0xFFFFFFFFL;
+
         return m;
     }
 }

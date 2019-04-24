@@ -3,11 +3,15 @@ package com.ccreanga.gameproxy.outgoing;
 import static com.ccreanga.gameproxy.outgoing.message.client.AbstractMessage.CLIENT_LOGIN;
 import static com.ccreanga.gameproxy.outgoing.message.client.AbstractMessage.CLIENT_LOGOUT;
 import static com.ccreanga.gameproxy.outgoing.message.client.AbstractMessage.CLIENT_SEND_DATA;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.ALREADY_AUTHENTICATED;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.UNAUTHORIZED;
 
+import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.CustomerConnectionManager;
+import com.ccreanga.gameproxy.CustomerSession;
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
 import com.ccreanga.gameproxy.outgoing.message.client.LogoutMessage;
+import com.ccreanga.gameproxy.outgoing.message.client.MalformedMessageException;
 import com.ccreanga.gameproxy.outgoing.message.client.SendData;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
 import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage;
@@ -28,7 +32,7 @@ public class OutgoingConnectionProcessor {
     private CustomerStorage customerStorage;
 
     @Autowired
-    private CustomerConnectionManager customerConnectionManager;
+    private CurrentSession currentSession;
 
     public void handleConnection(Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
@@ -41,7 +45,8 @@ public class OutgoingConnectionProcessor {
             switch (a){
                 case CLIENT_LOGIN:{
                     LoginMessage message = LoginMessage.readExternal(in);
-                    //todo - already login?
+                    LoginResultMessage resultMessage = null;
+
                     log.info("ClientLoginMessage {}",message.getName());
                     Set<Customer> customers = customerStorage.getCustomers();
 
@@ -55,33 +60,43 @@ public class OutgoingConnectionProcessor {
 
                     if (customer==null){
                         log.info("Not authorized");
-                        new LoginResultMessage(LoginResultMessage.UNAUTHORIZED).writeExternal(out);
-                        out.flush();
+                        resultMessage = new LoginResultMessage(UNAUTHORIZED);
+                        resultMessage.writeExternal(out);
                         return;
                     }
 
-                    //todo -add to session
-                    log.info("Authorized");
-                    new LoginResultMessage(LoginResultMessage.AUTHORIZED).writeExternal(out);
+                    CustomerSession customerSession = currentSession.login(customer,socket);
+                    if (customerSession!=null){
+                        resultMessage = new LoginResultMessage(ALREADY_AUTHENTICATED);
+                        log.info("Already authorized.");
+                    }else{
+                        log.info("Not authorized");
+                        resultMessage = new LoginResultMessage(UNAUTHORIZED);
+                    }
+
+                    resultMessage.writeExternal(out);
+                    break;
 
                 }
                 case CLIENT_LOGOUT:{
                     LogoutMessage message = LogoutMessage.readExternal(in);
-                    customerConnectionManager.unregisterCustomerConnection(socket);
-                    //todo - remove from session
+                    currentSession.logout(customer);
+                    break;
                 }
                 case CLIENT_SEND_DATA:{
                     SendData message = SendData.readExternal(in);
-                    if (message.getSecondsInterval()>0){
-                        //kafka
+                    if (message.getLastTimestamp()>0){
+                        //todo - read the data from kafka
                     }else{
-
+                        //do nothing, the data is already sent after the login message
                     }
+                    break;
                 }
                 default:{
-
+                    throw new MalformedMessageException("BAD_MESSAGE_TYPE","invalid message type "+a);
                 }
             }
+            out.flush();
 
         }
     }

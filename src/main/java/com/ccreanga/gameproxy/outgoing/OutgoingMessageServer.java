@@ -1,6 +1,5 @@
 package com.ccreanga.gameproxy.outgoing;
 
-import com.ccreanga.gameproxy.CustomerConnectionManager;
 import com.ccreanga.gameproxy.IOUtil;
 import com.ccreanga.gameproxy.ServerConfig;
 import java.io.IOException;
@@ -22,9 +21,6 @@ public class OutgoingMessageServer implements Runnable {
 
     @Autowired
     private ServerConfig serverConfig;
-
-    @Autowired
-    private CustomerConnectionManager customerConnectionManager;
 
     @Autowired
     OutgoingConnectionProcessor outgoingConnectionProcessor;

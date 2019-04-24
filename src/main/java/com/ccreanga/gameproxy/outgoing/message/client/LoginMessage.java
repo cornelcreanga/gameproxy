@@ -29,6 +29,8 @@ public class LoginMessage extends AbstractMessage{
             byte[] n = new byte[a];
             in.read(n);
             m.name = new String(n);
+        }else{
+            throw new MalformedMessageException("NAME_TOO_LONG","malformed message");
         }
         return m;
     }

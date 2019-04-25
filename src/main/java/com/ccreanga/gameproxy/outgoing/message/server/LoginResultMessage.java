@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResultMessage extends AbstractMessage{
+public class LoginResultMessage extends ServerMessage {
 
     public static final short AUTHORIZED = 10;
     public static final short ALREADY_AUTHENTICATED = 20;
@@ -22,10 +22,11 @@ public class LoginResultMessage extends AbstractMessage{
         out.write(messageType);
         out.write(result);
     }
-    public static LoginResultMessage readExternal(InputStream in) throws IOException {
-        LoginResultMessage m = new LoginResultMessage();
+
+    public void readExternal(InputStream in) throws IOException {
+
         int a = in.read();
-        m.result = a;
-        return m;
+        result = a;
+
     }
 }

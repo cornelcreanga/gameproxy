@@ -1,8 +1,8 @@
 package com.ccreanga.gameproxy;
 
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CustomerSession {
 
     private Customer customer;
-    private ArrayBlockingQueue<IncomingMessage> messageQueues;
+    private BlockingQueue<ServerMessage> messageQueues;
     private Socket socket;
 
 }

@@ -10,3 +10,10 @@ spring:
       bootstrap-servers: 10.132.126.155:32771
       key-deserializer: org.apache.kafka.common.serialization.LongSerializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer
+
+
+server:
+  incoming:
+    port: 8081
+  outgoing:
+    port: 8082

@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy.outgoing;
 
-import com.ccreanga.gameproxy.IOUtil;
 import com.ccreanga.gameproxy.ServerConfig;
+import com.ccreanga.gameproxy.util.IOUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -39,7 +39,7 @@ public class OutgoingMessageServer implements Runnable {
 
 
         try {
-            serverSocket = new ServerSocket(serverConfig.getOutgoingMessagePort());
+            serverSocket = new ServerSocket(serverConfig.getOutgoingPort());
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);

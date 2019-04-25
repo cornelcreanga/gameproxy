@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implements the dispatching rules - what customers are going to receive a particular message
+ */
 @Component
 public class MessageDispatcher {
 

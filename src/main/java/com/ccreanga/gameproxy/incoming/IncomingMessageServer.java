@@ -6,15 +6,16 @@ import com.ccreanga.gameproxy.CustomerSession;
 import com.ccreanga.gameproxy.MessageDispatcher;
 import com.ccreanga.gameproxy.ServerConfig;
 import com.ccreanga.gameproxy.kafka.KafkaMessageProducer;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.ccreanga.gameproxy.outgoing.message.server.DataMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class IncomingMessageServer implements Runnable {
@@ -38,7 +39,7 @@ public class IncomingMessageServer implements Runnable {
 
     public void run() {
         try {
-            serverSocket = new ServerSocket(serverConfig.getIncomingMessagePort());
+            serverSocket = new ServerSocket(serverConfig.getIncomingPort());
             while (!isStopped) {
                 Socket clientSocket = serverSocket.accept();
                 InputStream input = clientSocket.getInputStream();
@@ -50,10 +51,10 @@ public class IncomingMessageServer implements Runnable {
                     if (customerSession==null){
                         //todo - handle offline case
                     }else {
-                        ArrayBlockingQueue<IncomingMessage> queue = customerSession.getMessageQueues();
+                        BlockingQueue<ServerMessage> queue = customerSession.getMessageQueues();
                         if (queue != null) {
                             try {
-                                queue.add(message);
+                                queue.add(new DataMessage(message));
                             } catch (IllegalStateException e) {
                                 //todo - queue is full, handle this case
                             }

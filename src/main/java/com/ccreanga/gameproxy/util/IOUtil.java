@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.gameproxy.util;
 
 import java.io.Closeable;
 import java.io.EOFException;

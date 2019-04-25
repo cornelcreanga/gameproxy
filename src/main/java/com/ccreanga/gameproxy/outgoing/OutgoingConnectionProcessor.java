@@ -4,6 +4,7 @@ import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIEN
 import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIENT_LOGOUT;
 import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIENT_SEND_DATA;
 import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.ALREADY_AUTHENTICATED;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.AUTHORIZED;
 import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.UNAUTHORIZED;
 
 import com.ccreanga.gameproxy.CurrentSession;
@@ -70,8 +71,8 @@ public class OutgoingConnectionProcessor {
                         resultMessage = new LoginResultMessage(ALREADY_AUTHENTICATED);
                         log.info("Already authorized.");
                     }else{
-                        log.info("Not authorized");
-                        resultMessage = new LoginResultMessage(UNAUTHORIZED);
+                        log.info("Authorized");
+                        resultMessage = new LoginResultMessage(AUTHORIZED);
                     }
 
                     resultMessage.writeExternal(out);
@@ -95,7 +96,7 @@ public class OutgoingConnectionProcessor {
                     break;
                 }
                 default:{
-                    throw new MalformedMessageException("BAD_MESSAGE_TYPE","invalid message type "+a);
+                    throw new MalformedMessageException("invalid message type " + a, "BAD_MESSAGE_TYPE");
                 }
             }
             out.flush();

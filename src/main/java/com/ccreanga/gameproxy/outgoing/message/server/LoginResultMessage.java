@@ -3,13 +3,9 @@ package com.ccreanga.gameproxy.outgoing.message.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class LoginResultMessage extends ServerMessage {
 
     public static final short AUTHORIZED = 10;
@@ -18,13 +14,21 @@ public class LoginResultMessage extends ServerMessage {
 
     private int result;
 
+    public LoginResultMessage(int result) {
+        messageType = LOGIN_RESULT;
+        this.result = result;
+    }
+
+    public LoginResultMessage() {
+        messageType = LOGIN_RESULT;
+    }
+
     public void writeExternal(OutputStream out) throws IOException {
         out.write(messageType);
         out.write(result);
     }
 
     public void readExternal(InputStream in) throws IOException {
-
         int a = in.read();
         result = a;
 

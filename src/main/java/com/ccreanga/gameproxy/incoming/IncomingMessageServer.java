@@ -14,10 +14,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class IncomingMessageServer implements Runnable {
 
     @Autowired
@@ -40,6 +42,7 @@ public class IncomingMessageServer implements Runnable {
     public void run() {
         try {
             serverSocket = new ServerSocket(serverConfig.getIncomingPort());
+            log.info("incoming server started on {}", serverConfig.getIncomingPort());
             while (!isStopped) {
                 Socket clientSocket = serverSocket.accept();
                 InputStream input = clientSocket.getInputStream();

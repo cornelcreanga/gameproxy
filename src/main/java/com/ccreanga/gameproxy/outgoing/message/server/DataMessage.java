@@ -11,7 +11,12 @@ public class DataMessage extends ServerMessage {
 
     private IncomingMessage message;
 
+    public DataMessage() {
+        messageType = DATA;
+    }
+
     public DataMessage(IncomingMessage message) {
+        messageType = DATA;
         this.message = message;
     }
 

@@ -12,7 +12,6 @@ public abstract class ServerMessage {
 
     protected int messageType;
 
-
     public abstract void writeExternal(OutputStream out) throws IOException;
 
     public abstract void readExternal(InputStream in) throws IOException;

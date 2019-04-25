@@ -40,6 +40,7 @@ public class OutgoingMessageServer implements Runnable {
 
         try {
             serverSocket = new ServerSocket(serverConfig.getOutgoingPort());
+            log.info("outgoing server started on {}", serverConfig.getOutgoingPort());
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);

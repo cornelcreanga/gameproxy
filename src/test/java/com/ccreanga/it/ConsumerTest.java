@@ -11,11 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-public class ClientServerTest {
+public class ConsumerTest {
 
     @Test
     public void testAuthorized() throws IOException {
-        Socket socket = new Socket("127.0.0.1", 8081);
+        Socket socket = new Socket("127.0.0.1", 8082);
         socket.setSoTimeout(5000);
         LoginMessage message = new LoginMessage();
         message.setName("test1");
@@ -27,7 +27,7 @@ public class ClientServerTest {
 
     @Test
     public void testNotAuthorized() throws IOException {
-        Socket socket = new Socket("localhost", 8081);
+        Socket socket = new Socket("localhost", 8082);
         socket.setSoTimeout(5000);
         LoginMessage message = new LoginMessage();
         message.setName("test-unknown");

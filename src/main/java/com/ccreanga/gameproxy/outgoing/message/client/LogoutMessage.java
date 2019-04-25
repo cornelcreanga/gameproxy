@@ -17,6 +17,5 @@ public class LogoutMessage extends ClientMessage {
     }
 
     public void readExternal(InputStream in) throws IOException {
-        messageType = CLIENT_LOGOUT;
     }
 }

@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ServerConfig {
 
-    @Value("${server.incoming.port}")
+    @Value("${serverConfig.incoming.port}")
     private int incomingPort;
 
-    @Value("${server.outgoing.port}")
+    @Value("${serverConfig.outgoing.port}")
     private int outgoingPort;
 
 }

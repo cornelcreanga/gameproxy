@@ -9,7 +9,7 @@ import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.
 
 import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.CustomerSession;
+import com.ccreanga.gameproxy.CustomerSessionStatus;
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
 import com.ccreanga.gameproxy.outgoing.message.client.LogoutMessage;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,24 +51,16 @@ public class OutgoingConnectionProcessor {
 
                     log.info("ClientLoginMessage {}",message.getName());
                     Set<Customer> customers = customerStorage.getCustomers();
-
-                    for (Customer next : customers) {
-                        if (next.getName().equals(message.getName())) {
-                            customer = next;
-                            break;
-                        }
-
-                    }
-
-                    if (customer==null){
+                    Optional<Customer> optional = customers.stream().filter(c -> c.getName().equals(message.getName())).findAny();
+                    if (!optional.isPresent()) {
                         log.info("Not authorized");
                         resultMessage = new LoginResultMessage(UNAUTHORIZED);
                         resultMessage.writeExternal(out);
                         return;
                     }
-
-                    CustomerSession customerSession = currentSession.login(customer,socket);
-                    if (customerSession!=null){
+                    customer = optional.get();
+                    CustomerSessionStatus status = currentSession.login(customer, socket);
+                    if (status.isAlreadyLoggedIn()) {
                         resultMessage = new LoginResultMessage(ALREADY_AUTHENTICATED);
                         log.info("Already authorized.");
                     }else{
@@ -80,21 +73,32 @@ public class OutgoingConnectionProcessor {
 
                 }
                 case CLIENT_LOGOUT:{
-                    LogoutMessage message = new LogoutMessage();
-                    message.readExternal(in);
-                    currentSession.logout(customer);
-                    break;
+                    if (customer == null) {//ignore
+                        log.info("no customer logged in, can't logout");
+                        break;
+                    } else {
+                        LogoutMessage message = new LogoutMessage();
+                        message.readExternal(in);
+                        currentSession.logout(customer);
+                        break;
+                    }
                 }
                 case CLIENT_SEND_DATA:{
-                    SendData message = new SendData();
-                    message.readExternal(in);
-                    if (message.getLastTimestamp()>0){
-                        //todo - read the data from kafka
-                    }else{
-                        //do nothing, the data is already sent after the login message
+                    if (customer == null) {
+                        log.info("no customer logged in, can't send data");
+                        return;
+                    } else {
+                        SendData message = new SendData();
+                        message.readExternal(in);
+                        if (message.getLastTimestamp() > 0) {
+                            //todo - read the data from kafka
+                        } else {
+                            //do nothing, the data is already sent after the login message
+                        }
+                        break;
                     }
-                    break;
                 }
+                //socket close
                 case -1: {
                     return;
                 }

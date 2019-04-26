@@ -18,18 +18,20 @@ public class CurrentSession {
 
     private Map<Customer,CustomerSession> customerSessions = new ConcurrentHashMap<>();
 
-    public CustomerSession login(Customer customer, Socket socket){
-        CustomerSession newSession = new CustomerSession(customer, new LinkedBlockingQueue<>(10_000_000), socket);
+    public CustomerSessionStatus login(Customer customer, Socket socket) {
+        CustomerSession newSession = new CustomerSession(customer, new LinkedBlockingQueue<>(1_000_000), socket);
         CustomerSession customerSession = customerSessions.putIfAbsent(customer, newSession);
         if (customerSession != null) {
-            return customerSession;
+            return new CustomerSessionStatus(customerSession, true);
+        } else {
+            outgoingMessageSender.createConsumer(customer, socket, newSession.getMessageQueues());
+            log.trace("Created consumer thread for customer {}", customer.getName());
+            return new CustomerSessionStatus(customerSession, false);
         }
-        outgoingMessageSender.createConsumer(customer, socket, newSession.getMessageQueues());
-        log.trace("Created consumer thread for customer {}", customer.getName());
-        return null;
     }
 
     public void logout(Customer customer){
+        log.info("Customer name={} logout", customer.getName());
         customerSessions.remove(customer);
     }
 

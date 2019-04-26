@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers:  10.132.126.155:32771
+    bootstrap-servers: 10.132.126.155:32771
     consumer:
       group-id: group-id
       auto-offset-reset: earliest
@@ -14,12 +14,16 @@ spring:
     properties:
       request.timeout.ms: 100
 
-server:
+serverConfig:
   incoming:
     port: 8081
   outgoing:
     port: 8082
 
-
-
-
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    com.ccreanga: TRACE
+    org.apache.kafka: WARN
+    root: ERROR

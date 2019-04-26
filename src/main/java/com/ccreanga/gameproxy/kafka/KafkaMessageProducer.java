@@ -8,17 +8,21 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Component
 @Slf4j
+@EnableAsync
 public class KafkaMessageProducer {
 
     @Autowired
     private KafkaTemplate<Long, byte[]> kafkaTemplate;
 
+    @Async
     public void sendAsynchToKafka(String topic,IncomingMessage message) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(128);
         message.writeExternal(baos);
@@ -30,6 +34,7 @@ public class KafkaMessageProducer {
                 log.trace("Message {} sent succesfully to kafka", message.getId());
                 //todo - handle success
             }
+
             public void onFailure(Throwable ex) {
                 log.trace("Message {} sent failure, exception {}", message.getId(), ex.getMessage());
                 //todo - handle failure

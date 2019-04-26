@@ -12,7 +12,17 @@ public abstract class ServerMessage {
 
     protected int messageType;
 
-    public abstract void writeExternal(OutputStream out) throws IOException;
+    public ServerMessage(int messageType) {
+        this.messageType = messageType;
+    }
+
+    public void writeExternal(OutputStream out) throws IOException {
+        out.write(messageType);
+    }
 
     public abstract void readExternal(InputStream in) throws IOException;
+
+    public int getType() {
+        return messageType;
+    }
 }

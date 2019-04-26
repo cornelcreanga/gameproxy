@@ -11,10 +11,11 @@ public class SendData extends ClientMessage {
     private long lastTimestamp;//go back in time
 
     public SendData() {
-        messageType = CLIENT_SEND_DATA;
+        super(CLIENT_SEND_DATA);
     }
 
     public void writeExternal(OutputStream out) throws IOException {
+        super.writeExternal(out);
         out.write((int)(lastTimestamp >> 32));
         out.write((int)lastTimestamp);
     }

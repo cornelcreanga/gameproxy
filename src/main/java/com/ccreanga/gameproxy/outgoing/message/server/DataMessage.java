@@ -12,15 +12,16 @@ public class DataMessage extends ServerMessage {
     private IncomingMessage message;
 
     public DataMessage() {
-        messageType = DATA;
+        super(DATA);
     }
 
     public DataMessage(IncomingMessage message) {
-        messageType = DATA;
+        super(DATA);
         this.message = message;
     }
 
     public void writeExternal(OutputStream out) throws IOException {
+        super.writeExternal(out);
         message.writeExternal(out);
     }
 

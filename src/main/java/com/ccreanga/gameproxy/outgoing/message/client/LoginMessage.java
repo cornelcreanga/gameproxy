@@ -11,11 +11,11 @@ public class LoginMessage extends ClientMessage {
     private String name;
 
     public LoginMessage() {
-        messageType = CLIENT_LOGIN;
+        super(CLIENT_LOGIN);
     }
 
     public void writeExternal(OutputStream out) throws IOException {
-        out.write(messageType);
+        super.writeExternal(out);
         byte[] b = name.getBytes();
         out.write(b.length);
         out.write(b);

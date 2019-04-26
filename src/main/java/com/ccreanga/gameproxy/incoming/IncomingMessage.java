@@ -56,4 +56,12 @@ public class IncomingMessage {
         return m;
     }
 
+    @Override
+    public String toString() {
+        return
+            "id=" + id +
+                " matchId=" + matchId +
+                " message length=" + message.length +
+                " timestamp=" + timestamp;
+    }
 }

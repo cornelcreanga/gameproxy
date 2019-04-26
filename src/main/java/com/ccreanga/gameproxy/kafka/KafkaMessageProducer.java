@@ -3,6 +3,7 @@ package com.ccreanga.gameproxy.kafka;
 import com.ccreanga.gameproxy.incoming.IncomingMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,6 +13,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Component
+@Slf4j
 public class KafkaMessageProducer {
 
     @Autowired
@@ -25,9 +27,11 @@ public class KafkaMessageProducer {
 
         future.addCallback(new ListenableFutureCallback<SendResult<Long,byte[]>>() {
             public void onSuccess(SendResult<Long,byte[]> result) {
+                log.trace("Message {} sent succesfully to kafka", message.getId());
                 //todo - handle success
             }
             public void onFailure(Throwable ex) {
+                log.trace("Message {} sent failure, exception {}", message.getId(), ex.getMessage());
                 //todo - handle failure
             }
         });

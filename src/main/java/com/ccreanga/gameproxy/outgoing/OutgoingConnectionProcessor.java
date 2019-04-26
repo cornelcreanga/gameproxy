@@ -95,6 +95,9 @@ public class OutgoingConnectionProcessor {
                     }
                     break;
                 }
+                case -1: {
+                    return;
+                }
                 default:{
                     throw new MalformedMessageException("invalid message type " + a, "BAD_MESSAGE_TYPE");
                 }

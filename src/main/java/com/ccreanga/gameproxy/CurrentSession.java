@@ -5,10 +5,12 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class CurrentSession {
 
     @Autowired
@@ -22,8 +24,8 @@ public class CurrentSession {
         if (customerSession != null) {
             return customerSession;
         }
-
         outgoingMessageSender.createConsumer(customer, socket, newSession.getMessageQueues());
+        log.trace("Created consumer thread for customer {}", customer.getName());
         return null;
     }
 

@@ -9,11 +9,11 @@ import lombok.Data;
 public class LogoutMessage extends ClientMessage {
 
     public LogoutMessage() {
-        messageType = CLIENT_LOGOUT;
+        super(CLIENT_LOGOUT);
     }
 
     public void writeExternal(OutputStream out) throws IOException {
-        out.write(messageType);
+        super.writeExternal(out);
     }
 
     public void readExternal(InputStream in) throws IOException {

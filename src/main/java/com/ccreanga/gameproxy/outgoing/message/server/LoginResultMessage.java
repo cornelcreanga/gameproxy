@@ -14,23 +14,22 @@ public class LoginResultMessage extends ServerMessage {
 
     private int result;
 
+    public LoginResultMessage() {
+        super(LOGIN_RESULT);
+    }
+
     public LoginResultMessage(int result) {
-        messageType = LOGIN_RESULT;
+        super(LOGIN_RESULT);
         this.result = result;
     }
 
-    public LoginResultMessage() {
-        messageType = LOGIN_RESULT;
-    }
-
     public void writeExternal(OutputStream out) throws IOException {
-        out.write(messageType);
+        super.writeExternal(out);
         out.write(result);
     }
 
     public void readExternal(InputStream in) throws IOException {
         int a = in.read();
         result = a;
-
     }
 }

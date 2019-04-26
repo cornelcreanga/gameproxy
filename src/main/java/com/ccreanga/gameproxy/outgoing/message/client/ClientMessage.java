@@ -14,7 +14,17 @@ public abstract class ClientMessage {
 
     protected int messageType;
 
-    abstract void writeExternal(OutputStream out) throws IOException;
+    public ClientMessage(int messageType) {
+        this.messageType = messageType;
+    }
+
+    public void writeExternal(OutputStream out) throws IOException {
+        out.write(messageType);
+    }
 
     abstract void readExternal(InputStream in) throws IOException;
+
+    public int getType() {
+        return messageType;
+    }
 }

@@ -20,7 +20,7 @@ public class OutgoingMessageSender {
     private Map<Customer, OutgoingMessageWriter> writers = new ConcurrentHashMap<>();
 
     public void createConsumer(Customer customer, Socket socket, BlockingQueue<ServerMessage> messages) {
-        OutgoingMessageWriter outgoingMessageWriter = new OutgoingMessageWriter(socket, messages);
+        OutgoingMessageWriter outgoingMessageWriter = new OutgoingMessageWriter(customer, socket, messages);
         writers.put(customer, outgoingMessageWriter);
         service.submit(outgoingMessageWriter);
     }

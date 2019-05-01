@@ -1,50 +1,48 @@
 package com.ccreanga.it;
 
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMessage.DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMessage.LOGIN_RESULT;
 import static org.junit.Assert.assertEquals;
 
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
-import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
 import com.ccreanga.gameproxy.outgoing.message.server.DataMessage;
 import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 public class FlowTest {
 
     @Test
     public void testBasicFlow() throws Exception {
-        Socket socketConsumer = new Socket("127.0.0.1", 8082);
-        socketConsumer.setSoTimeout(5000);
-        InputStream inConsumer = socketConsumer.getInputStream();
-        OutputStream outConsumer = socketConsumer.getOutputStream();
 
-        LoginMessage message = new LoginMessage();
-        message.setName("test1");
-        message.writeExternal(outConsumer);
+        List<Client> clients = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Client client = new Client("test" + i, "127.0.0.1", 8082);
+            clients.add(client);
+        }
+        ForkJoinPool threadPool = new ForkJoinPool(16);
+        CountDownLatch latch = new CountDownLatch(clients.size());
 
-        int messageType = inConsumer.read();
-        LoginResultMessage ackMessage = new LoginResultMessage();
-        assertEquals(messageType, LOGIN_RESULT);
-        ackMessage.readExternal(inConsumer);
-        assertEquals(ackMessage.getResult(), LoginResultMessage.AUTHORIZED);
+        threadPool.submit(
+            () -> clients.parallelStream().forEach(client -> {
+                LoginResultMessage message = client.login();
+                assertEquals(message.getResult(), LoginResultMessage.AUTHORIZED);
+                latch.countDown();
+            }));
 
-        Socket socketProducer = new Socket("127.0.0.1", 8081);
-        socketProducer.setSoTimeout(5000);
-        IncomingMessage incomingMessage = new IncomingMessage(1, 2L, "some message".getBytes(), System.currentTimeMillis());
-        incomingMessage.writeExternal(socketProducer.getOutputStream());
+        latch.await(10, TimeUnit.SECONDS);
 
-        Thread.sleep(1000);
+        Producer producer = new Producer("127.0.0.1", 8081);
+        producer.produce(1, 1L, "some message");
 
-        DataMessage dataMessage = new DataMessage();
-        messageType = inConsumer.read();
-        assertEquals(messageType, DATA);
-        dataMessage.readExternal(inConsumer);
+        threadPool.submit(
+            () -> clients.parallelStream().forEach(client -> {
+                DataMessage message = client.readMessage();
+                assertEquals(message.getMessage().getId(), 1);
+            }));
 
-        assertEquals(dataMessage.getMessage().getId(), 1);
 
     }
+
 }

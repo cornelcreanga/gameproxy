@@ -29,7 +29,7 @@ public class LoginMessage extends ClientMessage {
             in.read(n);
             name = new String(n);
         }else{
-            throw new MalformedMessageException("malformed message", "NAME_TOO_LONG");
+            throw new MalformedMessageException("message too long " + a, "NAME_TOO_LONG");
         }
     }
 }

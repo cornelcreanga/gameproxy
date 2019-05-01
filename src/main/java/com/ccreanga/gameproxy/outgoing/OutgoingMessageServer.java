@@ -53,7 +53,9 @@ public class OutgoingMessageServer implements Runnable {
                             outgoingConnectionProcessor.handleConnection(socket);
                             IOUtil.closeSocketPreventingReset(socket);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            if (!e.getMessage().equals("Connection reset")) {
+                                e.printStackTrace();
+                            }
                         } finally {
                             IOUtil.closeSocketPreventingReset(socket);
                         }

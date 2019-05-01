@@ -1,6 +1,8 @@
 package com.ccreanga.gameproxy.outgoing;
 
+import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import lombok.extern.slf4j.Slf4j;
@@ -8,12 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OutgoingMessageWriter implements Runnable {
 
+    private Customer customer;
     private Socket socket;
     private BlockingQueue<ServerMessage> messages;
     private volatile boolean stopped = false;
 
 
-    public OutgoingMessageWriter(Socket socket, BlockingQueue<ServerMessage> messages) {
+    public OutgoingMessageWriter(Customer customer, Socket socket, BlockingQueue<ServerMessage> messages) {
+        this.customer = customer;
         this.socket = socket;
         this.messages = messages;
     }
@@ -25,7 +29,10 @@ public class OutgoingMessageWriter implements Runnable {
             try {
                 message = messages.take();
                 log.trace("Consumed the message type {} from the queue", message.getType());
-                message.writeExternal(socket.getOutputStream());
+                OutputStream out = socket.getOutputStream();
+                message.writeExternal(out);
+                out.flush();
+                log.trace("Wrote the message type {} to customer {}", message.getType(), customer.getName());
             } catch (Exception e) {
                 //todo handle exception
             }

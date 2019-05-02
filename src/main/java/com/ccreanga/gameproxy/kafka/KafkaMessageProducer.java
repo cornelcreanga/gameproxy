@@ -1,6 +1,6 @@
 package com.ccreanga.gameproxy.kafka;
 
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
+import com.ccreanga.gameproxy.incoming.IncomingMsg;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class KafkaMessageProducer {
     private KafkaTemplate<Long, byte[]> kafkaTemplate;
 
     @Async
-    public void sendAsynchToKafka(String topic,IncomingMessage message) throws IOException {
+    public void sendAsynchToKafka(String topic, IncomingMsg message) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(128);
         message.writeExternal(baos);
         ProducerRecord<Long, byte[]> record = new ProducerRecord<>(topic, message.getMatchId(), baos.toByteArray());

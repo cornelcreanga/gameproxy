@@ -1,21 +1,23 @@
 package com.ccreanga.gameproxy.outgoing.message.server;
 
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
+import com.ccreanga.gameproxy.incoming.IncomingMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class DataMessage extends ServerMessage {
+@EqualsAndHashCode(callSuper = true)
+public class DataMsg extends ServerMsg {
 
-    private IncomingMessage message;
+    private IncomingMsg message;
 
-    public DataMessage() {
+    public DataMsg() {
         super(DATA);
     }
 
-    public DataMessage(IncomingMessage message) {
+    public DataMsg(IncomingMsg message) {
         super(DATA);
         this.message = message;
     }
@@ -26,6 +28,6 @@ public class DataMessage extends ServerMessage {
     }
 
     public void readExternal(InputStream in) throws IOException {
-        message = IncomingMessage.readExternal(in);
+        message = IncomingMsg.readExternal(in);
     }
 }

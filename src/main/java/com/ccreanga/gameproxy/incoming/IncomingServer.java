@@ -6,8 +6,8 @@ import com.ccreanga.gameproxy.CustomerSession;
 import com.ccreanga.gameproxy.MessageDispatcher;
 import com.ccreanga.gameproxy.ServerConfig;
 import com.ccreanga.gameproxy.kafka.KafkaMessageProducer;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMessage;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class IncomingMessageServer implements Runnable {
+public class IncomingServer implements Runnable {
 
     @Autowired
     private ServerConfig serverConfig;
@@ -47,7 +47,7 @@ public class IncomingMessageServer implements Runnable {
             while (!isStopped) {
                 Socket clientSocket = serverSocket.accept();
                 InputStream input = clientSocket.getInputStream();
-                IncomingMessage message = IncomingMessage.readExternal(input);
+                IncomingMsg message = IncomingMsg.readExternal(input);
                 log.trace("IncomingMessage " + message.toString());
 
                 List<Customer> customers = messageDispatcher.getCustomers(message);
@@ -62,11 +62,11 @@ public class IncomingMessageServer implements Runnable {
                         //todo - handle offline case
                     }else {
                         log.trace("Customer {} is online", customer.getName());
-                        BlockingQueue<ServerMessage> queue = customerSession.getMessageQueues();
+                        BlockingQueue<ServerMsg> queue = customerSession.getMessageQueues();
                         if (queue != null) {
                             try {
                                 log.trace("Add message to queue");
-                                queue.add(new DataMessage(message));
+                                queue.add(new DataMsg(message));
                             } catch (IllegalStateException e) {
                                 //todo - queue is full, handle this case
                             }

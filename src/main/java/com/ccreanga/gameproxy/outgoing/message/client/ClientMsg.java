@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import lombok.Data;
 
 @Data
-public abstract class ClientMessage {
+public abstract class ClientMsg {
 
     public static final short CLIENT_LOGIN = 1;
     public static final short CLIENT_LOGOUT = 2;
@@ -14,7 +14,7 @@ public abstract class ClientMessage {
 
     protected int messageType;
 
-    public ClientMessage(int messageType) {
+    public ClientMsg(int messageType) {
         this.messageType = messageType;
     }
 

@@ -1,16 +1,20 @@
 package com.ccreanga.gameproxy.outgoing.message.client;
 
+import static com.ccreanga.gameproxy.util.IOUtil.readFully;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class LoginMessage extends ClientMessage {
+@EqualsAndHashCode(callSuper = true)
+public class LoginMsg extends ClientMsg {
 
     private String name;
 
-    public LoginMessage() {
+    public LoginMsg() {
         super(CLIENT_LOGIN);
     }
 
@@ -26,10 +30,10 @@ public class LoginMessage extends ClientMessage {
         int a = in.read();
         if ((a>0) && (a<100)) {
             byte[] n = new byte[a];
-            in.read(n);
+            readFully(in, n);
             name = new String(n);
         }else{
-            throw new MalformedMessageException("message too long " + a, "NAME_TOO_LONG");
+            throw new MalformedException("message too long " + a, "NAME_TOO_LONG");
         }
     }
 }

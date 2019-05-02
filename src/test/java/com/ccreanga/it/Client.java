@@ -1,12 +1,13 @@
 package com.ccreanga.it;
 
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMessage.DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMessage.LOGIN_RESULT;
+import static com.ccreanga.gameproxy.outgoing.message.server.ServerMsg.DATA;
+import static com.ccreanga.gameproxy.outgoing.message.server.ServerMsg.LOGIN_RESULT;
 import static org.junit.Assert.assertEquals;
 
-import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMessage;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage;
+import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
+import com.ccreanga.gameproxy.outgoing.message.client.LogoutMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -32,14 +33,14 @@ public class Client {
 
     }
 
-    public LoginResultMessage login() {
+    public LoginResultMsg login() {
         try {
-            LoginMessage message = new LoginMessage();
+            LoginMsg message = new LoginMsg();
             message.setName(name);
             message.writeExternal(out);
             int messageType = in.read();
             assertEquals(messageType, LOGIN_RESULT);
-            LoginResultMessage ackMessage = new LoginResultMessage();
+            LoginResultMsg ackMessage = new LoginResultMsg();
             ackMessage.readExternal(in);
             return ackMessage;
         } catch (Exception e) {
@@ -50,8 +51,7 @@ public class Client {
 
     public void logout() {
         try {
-            LoginMessage message = new LoginMessage();
-            message.setName("test1");
+            LogoutMsg message = new LogoutMsg();
             message.writeExternal(out);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -59,12 +59,12 @@ public class Client {
 
     }
 
-    public DataMessage readMessage() {
+    public DataMsg readMessage() {
         try {
 
             int messageType = in.read();
             assertEquals(messageType, DATA);
-            DataMessage dataMessage = new DataMessage();
+            DataMsg dataMessage = new DataMsg();
             dataMessage.readExternal(in);
             return dataMessage;
         } catch (Exception e) {

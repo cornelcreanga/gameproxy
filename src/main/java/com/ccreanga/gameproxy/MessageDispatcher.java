@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy;
 
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
+import com.ccreanga.gameproxy.incoming.IncomingMsg;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ public class MessageDispatcher {
     @Autowired
     private CustomerStorage customerStorage;
 
-    public List<Customer> getCustomers(IncomingMessage message){
+    public List<Customer> getCustomers(IncomingMsg message) {
         Set<Customer> customers = customerStorage.getCustomers();
         return customers.stream().
             filter(customer -> customer.hasMatch(message.getMatchId())).

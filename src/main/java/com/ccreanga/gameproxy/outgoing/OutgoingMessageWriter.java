@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy.outgoing;
 
 import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
@@ -12,11 +12,11 @@ public class OutgoingMessageWriter implements Runnable {
 
     private Customer customer;
     private Socket socket;
-    private BlockingQueue<ServerMessage> messages;
+    private BlockingQueue<ServerMsg> messages;
     private volatile boolean stopped = false;
 
 
-    public OutgoingMessageWriter(Customer customer, Socket socket, BlockingQueue<ServerMessage> messages) {
+    public OutgoingMessageWriter(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
         this.customer = customer;
         this.socket = socket;
         this.messages = messages;
@@ -25,7 +25,7 @@ public class OutgoingMessageWriter implements Runnable {
     @Override
     public void run() {
         while (!stopped) {
-            ServerMessage message = null;
+            ServerMsg message = null;
             try {
                 message = messages.take();
                 log.trace("Consumed the message type {} from the queue", message.getType());

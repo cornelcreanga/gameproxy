@@ -1,8 +1,13 @@
 package com.ccreanga.gameproxy.incoming;
 
+import static com.ccreanga.gameproxy.util.IOUtil.readFully;
+import static com.ccreanga.gameproxy.util.IOUtil.readLong;
+import static com.ccreanga.gameproxy.util.IOUtil.writeLong;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,19 +15,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomingMessage {
+public class IncomingMsg {
 
-    private long id;
+    private UUID id;
     private long matchId;
     private byte[] message;
     private long timestamp;
 
     public void writeExternal(OutputStream out) throws IOException {
-        out.write((int)(id >> 32));
-        out.write((int)id);
+        long msb = id.getMostSignificantBits();
+        long lsb = id.getLeastSignificantBits();
+        writeLong(out, msb);
+        writeLong(out, lsb);
 
-        out.write((int)(matchId >> 32));
-        out.write((int)matchId);
+        writeLong(out, matchId);
 
         if (message!=null){
             out.write(message.length);
@@ -31,28 +37,23 @@ public class IncomingMessage {
             out.write(0);
         }
 
-
-        out.write((int)(timestamp >> 32));
-        out.write((int)timestamp);
+        writeLong(out, timestamp);
     }
 
-    public static IncomingMessage readExternal(InputStream in) throws IOException {
-        IncomingMessage m = new IncomingMessage();
-        int a,b;
-        a = in.read();
-        b = in.read();
-        m.id = (long)a << 32 | b & 0xFFFFFFFFL;
-        a = in.read();
-        b = in.read();
-        m.matchId = (long)a << 32 | b & 0xFFFFFFFFL;
-        a = in.read();
+    public static IncomingMsg readExternal(InputStream in) throws IOException {
+        IncomingMsg m = new IncomingMsg();
+        long msb, lsb;
+
+        msb = readLong(in);
+        lsb = readLong(in);
+        m.id = new UUID(msb, lsb);
+        m.matchId = readLong(in);
+        int a = in.read();
         if (a!=0) {
             m.message = new byte[a];
-            in.read(m.message);
+            readFully(in, m.message);
         }
-        a = in.read();
-        b = in.read();
-        m.timestamp = (long)a << 32 | b & 0xFFFFFFFFL;
+        m.timestamp = readLong(in);
         return m;
     }
 

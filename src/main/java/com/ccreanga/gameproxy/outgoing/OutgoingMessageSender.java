@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy.outgoing;
 
 import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMessage;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -19,7 +19,7 @@ public class OutgoingMessageSender {
     private ExecutorService service = new ThreadPoolExecutor(16, 64, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
     private Map<Customer, OutgoingMessageWriter> writers = new ConcurrentHashMap<>();
 
-    public void createConsumer(Customer customer, Socket socket, BlockingQueue<ServerMessage> messages) {
+    public void createConsumer(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
         OutgoingMessageWriter outgoingMessageWriter = new OutgoingMessageWriter(customer, socket, messages);
         writers.put(customer, outgoingMessageWriter);
         service.submit(outgoingMessageWriter);

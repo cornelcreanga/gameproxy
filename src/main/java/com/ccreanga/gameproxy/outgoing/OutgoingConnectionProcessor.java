@@ -1,21 +1,21 @@
 package com.ccreanga.gameproxy.outgoing;
 
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIENT_LOGIN;
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIENT_LOGOUT;
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMessage.CLIENT_SEND_DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.ALREADY_AUTHENTICATED;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.AUTHORIZED;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage.UNAUTHORIZED;
+import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.CLIENT_LOGIN;
+import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.CLIENT_LOGOUT;
+import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.CLIENT_SEND_DATA;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.ALREADY_AUTHENTICATED;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.AUTHORIZED;
+import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.UNAUTHORIZED;
 
 import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.CustomerSessionStatus;
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
-import com.ccreanga.gameproxy.outgoing.message.client.LoginMessage;
-import com.ccreanga.gameproxy.outgoing.message.client.LogoutMessage;
-import com.ccreanga.gameproxy.outgoing.message.client.MalformedMessageException;
-import com.ccreanga.gameproxy.outgoing.message.client.SendData;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMessage;
+import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
+import com.ccreanga.gameproxy.outgoing.message.client.LogoutMsg;
+import com.ccreanga.gameproxy.outgoing.message.client.MalformedException;
+import com.ccreanga.gameproxy.outgoing.message.client.SendDataMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,27 +45,27 @@ public class OutgoingConnectionProcessor {
             int a = in.read();
             switch (a){
                 case CLIENT_LOGIN:{
-                    LoginMessage message = new LoginMessage();
+                    LoginMsg message = new LoginMsg();
                     message.readExternal(in);
-                    LoginResultMessage resultMessage = null;
+                    LoginResultMsg resultMessage = null;
 
                     log.info("ClientLoginMessage {}",message.getName());
                     Set<Customer> customers = customerStorage.getCustomers();
                     Optional<Customer> optional = customers.stream().filter(c -> c.getName().equals(message.getName())).findAny();
                     if (!optional.isPresent()) {
                         log.info("Not authorized");
-                        resultMessage = new LoginResultMessage(UNAUTHORIZED);
+                        resultMessage = new LoginResultMsg(UNAUTHORIZED);
                         resultMessage.writeExternal(out);
                         return;
                     }
                     customer = optional.get();
                     CustomerSessionStatus status = currentSession.login(customer, socket);
                     if (status.isAlreadyLoggedIn()) {
-                        resultMessage = new LoginResultMessage(ALREADY_AUTHENTICATED);
+                        resultMessage = new LoginResultMsg(ALREADY_AUTHENTICATED);
                         log.info("Already authorized.");
                     }else{
                         log.info("Authorized");
-                        resultMessage = new LoginResultMessage(AUTHORIZED);
+                        resultMessage = new LoginResultMsg(AUTHORIZED);
                     }
 
                     resultMessage.writeExternal(out);
@@ -77,7 +77,7 @@ public class OutgoingConnectionProcessor {
                         log.info("no customer logged in, can't logout");
                         break;
                     } else {
-                        LogoutMessage message = new LogoutMessage();
+                        LogoutMsg message = new LogoutMsg();
                         message.readExternal(in);
                         currentSession.logout(customer);
                         break;
@@ -88,7 +88,7 @@ public class OutgoingConnectionProcessor {
                         log.info("no customer logged in, can't send data");
                         return;
                     } else {
-                        SendData message = new SendData();
+                        SendDataMsg message = new SendDataMsg();
                         message.readExternal(in);
                         if (message.getLastTimestamp() > 0) {
                             //todo - read the data from kafka
@@ -103,7 +103,7 @@ public class OutgoingConnectionProcessor {
                     return;
                 }
                 default:{
-                    throw new MalformedMessageException("invalid message type " + a, "BAD_MESSAGE_TYPE");
+                    throw new MalformedException("invalid message type " + a, "BAD_MESSAGE_TYPE");
                 }
             }
             out.flush();

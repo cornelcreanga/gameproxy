@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class LogoutMessage extends ClientMessage {
+@EqualsAndHashCode(callSuper = true)
+public class LogoutMsg extends ClientMsg {
 
-    public LogoutMessage() {
+    public LogoutMsg() {
         super(CLIENT_LOGOUT);
     }
 

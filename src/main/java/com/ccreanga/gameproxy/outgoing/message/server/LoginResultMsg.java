@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class LoginResultMessage extends ServerMessage {
+@EqualsAndHashCode(callSuper = true)
+public class LoginResultMsg extends ServerMsg {
 
     public static final short AUTHORIZED = 10;
     public static final short ALREADY_AUTHENTICATED = 20;
@@ -14,11 +16,11 @@ public class LoginResultMessage extends ServerMessage {
 
     private int result;
 
-    public LoginResultMessage() {
+    public LoginResultMsg() {
         super(LOGIN_RESULT);
     }
 
-    public LoginResultMessage(int result) {
+    public LoginResultMsg(int result) {
         super(LOGIN_RESULT);
         this.result = result;
     }
@@ -29,7 +31,6 @@ public class LoginResultMessage extends ServerMessage {
     }
 
     public void readExternal(InputStream in) throws IOException {
-        int a = in.read();
-        result = a;
+        result = in.read();
     }
 }

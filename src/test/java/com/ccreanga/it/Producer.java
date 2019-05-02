@@ -1,10 +1,11 @@
 package com.ccreanga.it;
 
-import com.ccreanga.gameproxy.incoming.IncomingMessage;
+import com.ccreanga.gameproxy.incoming.IncomingMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 public class Producer {
 
@@ -25,8 +26,8 @@ public class Producer {
 
     }
 
-    public void produce(long id, long matchId, String message) throws IOException {
-        IncomingMessage incomingMessage = new IncomingMessage(id, matchId, message.getBytes(), System.currentTimeMillis());
+    public void produce(UUID id, long matchId, String message) throws IOException {
+        IncomingMsg incomingMessage = new IncomingMsg(id, matchId, message.getBytes(), System.currentTimeMillis());
         incomingMessage.writeExternal(out);
     }
 }

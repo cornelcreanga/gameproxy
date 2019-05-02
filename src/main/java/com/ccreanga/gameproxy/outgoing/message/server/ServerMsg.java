@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class ServerMessage {
+public abstract class ServerMsg {
 
     public static final short LOGIN_RESULT = 1;
     public static final short DATA = 2;
@@ -12,7 +12,7 @@ public abstract class ServerMessage {
 
     protected int messageType;
 
-    public ServerMessage(int messageType) {
+    public ServerMsg(int messageType) {
         this.messageType = messageType;
     }
 

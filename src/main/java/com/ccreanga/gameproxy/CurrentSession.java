@@ -1,6 +1,6 @@
 package com.ccreanga.gameproxy;
 
-import com.ccreanga.gameproxy.outgoing.OutgoingMessageSender;
+import com.ccreanga.gameproxy.outgoing.realtime.RealtimeSender;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CurrentSession {
 
     @Autowired
-    private OutgoingMessageSender outgoingMessageSender;
+    private RealtimeSender outgoingSender;
 
     private Map<Customer,CustomerSession> customerSessions = new ConcurrentHashMap<>();
 
@@ -24,7 +24,7 @@ public class CurrentSession {
         if (customerSession != null) {
             return new CustomerSessionStatus(customerSession, true);
         } else {
-            outgoingMessageSender.createConsumer(customer, socket, newSession.getMessageQueues());
+            outgoingSender.createConsumer(customer, socket, newSession.getMessageQueues());
             log.trace("Created consumer thread for customer {}", customer.getName());
             return new CustomerSessionStatus(customerSession, false);
         }

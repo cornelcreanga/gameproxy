@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy;
 
 import com.ccreanga.gameproxy.incoming.IncomingServer;
-import com.ccreanga.gameproxy.outgoing.OutgoingMessageServer;
+import com.ccreanga.gameproxy.outgoing.realtime.RealtimeServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,13 +16,13 @@ public class ServerRun implements CommandLineRunner {
     private IncomingServer incomingServer;
 
     @Autowired
-    private OutgoingMessageServer outgoingMessageServer;
+    private RealtimeServer realtimeServer;
 
     @Override
     public void run(String... args) throws Exception {
         Thread thread1 = new Thread(incomingServer);
         thread1.start();
-        Thread thread2 = new Thread(outgoingMessageServer);
+        Thread thread2 = new Thread(realtimeServer);
         thread2.start();
 
     }

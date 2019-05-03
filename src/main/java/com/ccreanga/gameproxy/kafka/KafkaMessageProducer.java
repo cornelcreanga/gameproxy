@@ -29,14 +29,14 @@ public class KafkaMessageProducer {
         ProducerRecord<Long, byte[]> record = new ProducerRecord<>(topic, message.getMatchId(), baos.toByteArray());
         ListenableFuture<SendResult<Long,byte[]>> future = kafkaTemplate.send(record);
 
-        future.addCallback(new ListenableFutureCallback<SendResult<Long,byte[]>>() {
-            public void onSuccess(SendResult<Long,byte[]> result) {
-                log.trace("Message {} sent succesfully to kafka", message.getId());
+        future.addCallback(new ListenableFutureCallback<>() {
+            public void onSuccess(SendResult<Long, byte[]> result) {
+                log.trace("Message {} sent succesfully to topic", topic);
                 //todo - handle success
             }
 
             public void onFailure(Throwable ex) {
-                log.trace("Message {} sent failure, exception {}", message.getId(), ex.getMessage());
+                log.trace("Message {} sent failure, exception {}, topic {}", message.getId(), ex.getMessage(), topic);
                 //todo - handle failure
             }
         });

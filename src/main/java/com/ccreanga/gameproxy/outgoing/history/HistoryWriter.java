@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy.outgoing;
+package com.ccreanga.gameproxy.outgoing.history;
 
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OutgoingMessageWriter implements Runnable {
+public class HistoryWriter implements Runnable {
 
     private Customer customer;
     private Socket socket;
@@ -16,7 +16,7 @@ public class OutgoingMessageWriter implements Runnable {
     private volatile boolean stopped = false;
 
 
-    public OutgoingMessageWriter(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
+    public HistoryWriter(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
         this.customer = customer;
         this.socket = socket;
         this.messages = messages;

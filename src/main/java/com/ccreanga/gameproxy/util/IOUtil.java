@@ -56,19 +56,8 @@ public class IOUtil {
         }
     }
 
-//    public static long readLong(InputStream in) throws IOException{
-//        int a,b;
-//        a = in.read();
-//        b = in.read();
-//        return (long)a << 32 | b & 0xFFFFFFFFL;
-//    }
-//    public static void writeLong(OutputStream out,long l) throws IOException{
-//        out.write((int)(l >> 32));
-//        out.write((int)l);
-//    }
-
     public static long readLong(InputStream in) throws IOException {
-        byte readBuffer[] = new byte[8];
+        byte[] readBuffer = new byte[8];
         readFully(in, readBuffer);
         return (((long) readBuffer[0] << 56) +
             ((long) (readBuffer[1] & 255) << 48) +
@@ -81,7 +70,7 @@ public class IOUtil {
     }
 
     public static void writeLong(OutputStream out, long v) throws IOException {
-        byte writeBuffer[] = new byte[8];
+        byte[] writeBuffer = new byte[8];
         writeBuffer[0] = (byte) (v >>> 56);
         writeBuffer[1] = (byte) (v >>> 48);
         writeBuffer[2] = (byte) (v >>> 40);
@@ -152,6 +141,5 @@ public class IOUtil {
         int dotIndex = fileName.lastIndexOf('.');
         return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
     }
-
 
 }

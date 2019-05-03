@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy.outgoing;
+package com.ccreanga.gameproxy.outgoing.history;
 
 import com.ccreanga.gameproxy.ServerConfig;
 import com.ccreanga.gameproxy.util.IOUtil;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OutgoingMessageServer implements Runnable {
+public class HistoryServer implements Runnable {
 
     @Autowired
     private ServerConfig serverConfig;
 
     @Autowired
-    OutgoingConnectionProcessor outgoingConnectionProcessor;
+    HistoryConnectionProcessor historyConnectionProcessor;
 
     private ServerSocket serverSocket = null;
     private boolean isStopped = false;
@@ -50,7 +50,7 @@ public class OutgoingMessageServer implements Runnable {
                     threadPool.execute(() -> {
                         try {
                             //keep the connection open unless close/not authorized
-                            outgoingConnectionProcessor.handleConnection(socket);
+                            historyConnectionProcessor.handleConnection(socket);
                             IOUtil.closeSocketPreventingReset(socket);
                         } catch (IOException e) {
                             if (!e.getMessage().equals("Connection reset")) {

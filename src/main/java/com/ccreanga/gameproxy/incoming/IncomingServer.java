@@ -13,14 +13,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class IncomingServer implements Runnable {
 
-    @Autowired
     private ServerConfig serverConfig;
-
-    @Autowired
-    IncomingConnectionProcessor incomingConnectionProcessor;
+    private IncomingConnectionProcessor incomingConnectionProcessor;
 
     private ServerSocket serverSocket = null;
     private boolean isStopped = false;
+
+    public IncomingServer(ServerConfig serverConfig, IncomingConnectionProcessor incomingConnectionProcessor) {
+        this.serverConfig = serverConfig;
+        this.incomingConnectionProcessor = incomingConnectionProcessor;
+    }
 
     public void run() {
 

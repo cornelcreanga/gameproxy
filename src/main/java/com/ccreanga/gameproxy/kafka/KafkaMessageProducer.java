@@ -19,8 +19,11 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @EnableAsync
 public class KafkaMessageProducer {
 
-    @Autowired
-    private KafkaTemplate<Long, byte[]> kafkaTemplate;
+    private final KafkaTemplate<Long, byte[]> kafkaTemplate;
+
+    public KafkaMessageProducer(KafkaTemplate<Long, byte[]> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     @Async
     public void sendAsynchToKafka(String topic, IncomingMsg message) throws IOException {

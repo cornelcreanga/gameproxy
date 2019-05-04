@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public abstract class ClientMsg {
 
-    public static final short CLIENT_LOGIN = 1;
-    public static final short CLIENT_LOGOUT = 2;
-    public static final short CLIENT_SEND_DATA = 3;
+    public static final short LOGIN = 1;
+    public static final short LOGOUT = 2;
+    public static final short HISTORICAL_DATA = 3;
 
     protected int messageType;
 

@@ -17,7 +17,7 @@ public class OfflineDataMsg extends ClientMsg {
     private long endTimestamp;//go back in time
 
     public OfflineDataMsg() {
-        super(CLIENT_SEND_DATA);
+        super(HISTORICAL_DATA);
     }
 
     public void writeExternal(OutputStream out) throws IOException {

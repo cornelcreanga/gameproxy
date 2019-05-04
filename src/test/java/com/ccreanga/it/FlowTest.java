@@ -3,7 +3,6 @@ package com.ccreanga.it;
 import static org.junit.Assert.assertEquals;
 
 import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,16 +21,8 @@ public class FlowTest {
             clients.add(client);
         }
         ForkJoinPool threadPool = new ForkJoinPool(16);
-        CountDownLatch latchLogin = new CountDownLatch(clients.size());
 
-        threadPool.submit(
-            () -> clients.parallelStream().forEach(client -> {
-                LoginResultMsg message = client.login();
-                assertEquals(message.getResult(), LoginResultMsg.AUTHORIZED);
-                latchLogin.countDown();
-            }));
-
-        latchLogin.await();
+        ClientsHelper.login(threadPool,clients);
 
         Producer producer = new Producer("127.0.0.1", 8081);
         UUID uuid = UUID.randomUUID();
@@ -46,13 +37,7 @@ public class FlowTest {
 
         latchConsume.await();
 
-        CountDownLatch latchLogout = new CountDownLatch(clients.size());
-        threadPool.submit(
-            () -> clients.parallelStream().forEach(client -> {
-                client.logout();
-                latchLogout.countDown();
-            }));
-        latchLogout.await();
+        ClientsHelper.logout(threadPool,clients);
 
     }
 

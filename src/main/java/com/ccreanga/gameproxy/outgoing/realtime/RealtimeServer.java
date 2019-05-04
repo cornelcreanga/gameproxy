@@ -19,14 +19,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class RealtimeServer implements Runnable {
 
-    @Autowired
     private ServerConfig serverConfig;
 
-    @Autowired
-    RealtimeConnectionProcessor outgoingConnectionProcessor;
+    private RealtimeConnectionProcessor outgoingConnectionProcessor;
 
     private ServerSocket serverSocket = null;
     private boolean isStopped = false;
+
+    public RealtimeServer(ServerConfig serverConfig, RealtimeConnectionProcessor outgoingConnectionProcessor) {
+        this.serverConfig = serverConfig;
+        this.outgoingConnectionProcessor = outgoingConnectionProcessor;
+    }
 
 
     public void run() {

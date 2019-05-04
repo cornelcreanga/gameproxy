@@ -15,7 +15,7 @@ public class LoginMsg extends ClientMsg {
     private String name;
 
     public LoginMsg() {
-        super(CLIENT_LOGIN);
+        super(LOGIN);
     }
 
     public void writeExternal(OutputStream out) throws IOException {

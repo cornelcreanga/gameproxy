@@ -3,6 +3,7 @@ package com.ccreanga.gameproxy;
 import com.ccreanga.gameproxy.outgoing.realtime.RealtimeSender;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CurrentSession {
 
-    @Autowired
-    private RealtimeSender outgoingSender;
+    private final RealtimeSender outgoingSender;
 
     private Map<Customer,CustomerSession> customerSessions = new ConcurrentHashMap<>();
+
+    public CurrentSession(RealtimeSender outgoingSender) {
+        this.outgoingSender = outgoingSender;
+    }
 
     public CustomerSessionStatus login(Customer customer, Socket socket) {
         CustomerSession newSession = new CustomerSession(customer, new LinkedBlockingQueue<>(1_000_000), socket);
@@ -37,5 +41,9 @@ public class CurrentSession {
 
     public CustomerSession getCustomerSession(Customer customer){
         return customerSessions.get(customer);
+    }
+
+    public Optional<Customer> getCustomerFromSession(String name) {
+        return customerSessions.keySet().stream().filter(c -> c.getName().equals(name)).findAny();
     }
 }

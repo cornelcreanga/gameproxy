@@ -21,14 +21,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class IncomingConnectionProcessor {
 
-    @Autowired
-    private CurrentSession currentSession;
+    private final CurrentSession currentSession;
 
-    @Autowired
-    MessageDispatcher messageDispatcher;
+    private MessageDispatcher messageDispatcher;
 
-    @Autowired
-    KafkaMessageProducer kafkaMessageProducer;
+    private KafkaMessageProducer kafkaMessageProducer;
+
+    public IncomingConnectionProcessor(CurrentSession currentSession, MessageDispatcher messageDispatcher,
+        KafkaMessageProducer kafkaMessageProducer) {
+        this.currentSession = currentSession;
+        this.messageDispatcher = messageDispatcher;
+        this.kafkaMessageProducer = kafkaMessageProducer;
+    }
 
     public void handleConnection(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();

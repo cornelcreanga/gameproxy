@@ -15,7 +15,6 @@ public class RealtimeWriter implements Runnable {
     private BlockingQueue<ServerMsg> messages;
     private volatile boolean stopped = false;
 
-
     public RealtimeWriter(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
         this.customer = customer;
         this.socket = socket;

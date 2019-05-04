@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RealtimeSender {
 
-
     private ExecutorService service = new ThreadPoolExecutor(16, 64, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
     private Map<Customer, RealtimeWriter> writers = new ConcurrentHashMap<>();
 

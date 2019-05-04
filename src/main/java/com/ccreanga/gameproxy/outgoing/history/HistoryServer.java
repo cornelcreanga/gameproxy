@@ -19,14 +19,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class HistoryServer implements Runnable {
 
-    @Autowired
     private ServerConfig serverConfig;
 
-    @Autowired
-    HistoryConnectionProcessor historyConnectionProcessor;
+    private HistoryConnectionProcessor historyConnectionProcessor;
 
     private ServerSocket serverSocket = null;
     private boolean isStopped = false;
+
+    public HistoryServer(ServerConfig serverConfig, HistoryConnectionProcessor historyConnectionProcessor) {
+        this.serverConfig = serverConfig;
+        this.historyConnectionProcessor = historyConnectionProcessor;
+    }
 
 
     public void run() {
@@ -44,7 +47,6 @@ public class HistoryServer implements Runnable {
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);
-                InputStream input = socket.getInputStream();
 
                 try {
                     threadPool.execute(() -> {

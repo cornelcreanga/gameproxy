@@ -22,7 +22,7 @@ apply plugin: 'io.spring.dependency-management'
 
 
 bootJar {
-    baseName = 'gameproxy'
+    baseName = 'realtime'
     version '1.0-SNAPSHOT'
 }
 

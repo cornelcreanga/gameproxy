@@ -2,7 +2,7 @@ spring:
   kafka:
     bootstrap-servers: 10.132.126.155:32771
     consumer:
-      group-id: group-id
+      group-id: history
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.LongSerializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer

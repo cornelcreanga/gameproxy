@@ -11,13 +11,19 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class OfflineDataMsg extends ClientMsg {
+public class HistoryDataMsg extends ClientMsg {
 
     private long startTimestamp;//go back in time
     private long endTimestamp;//go back in time
 
-    public OfflineDataMsg() {
+    HistoryDataMsg(){
         super(HISTORICAL_DATA);
+    }
+
+    public HistoryDataMsg(long startTimestamp, long endTimestamp) {
+        super(HISTORICAL_DATA);
+        this.startTimestamp = startTimestamp;
+        this.endTimestamp = endTimestamp;
     }
 
     public void writeExternal(OutputStream out) throws IOException {

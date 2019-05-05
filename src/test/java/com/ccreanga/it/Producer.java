@@ -27,9 +27,15 @@ public class Producer {
     }
 
     public void produce(UUID id, long matchId, String message) throws IOException {
-        IncomingMsg incomingMessage = new IncomingMsg(id, matchId, message.getBytes(), System.currentTimeMillis());
-        incomingMessage.writeExternal(out);
+        produce(id,matchId,message,System.currentTimeMillis());
     }
+
+    public void produce(UUID id, long matchId, String message,long timestamp) throws IOException {
+        IncomingMsg incomingMessage = new IncomingMsg(id, matchId, message.getBytes(), timestamp);
+        incomingMessage.writeExternal(out);
+        out.flush();
+    }
+
 }
 
 

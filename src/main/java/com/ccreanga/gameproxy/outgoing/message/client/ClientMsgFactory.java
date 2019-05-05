@@ -17,8 +17,8 @@ public class ClientMsgFactory {
         return message;
     }
 
-    public static OfflineDataMsg sendDataMsg(InputStream in) throws IOException {
-        OfflineDataMsg message = new OfflineDataMsg();
+    public static HistoryDataMsg sendDataMsg(InputStream in) throws IOException {
+        HistoryDataMsg message = new HistoryDataMsg();
         message.readExternal(in);
         return message;
     }

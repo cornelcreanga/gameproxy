@@ -14,9 +14,15 @@ public class LoginMsg extends ClientMsg {
 
     private String name;
 
-    public LoginMsg() {
+    LoginMsg(){
         super(LOGIN);
     }
+
+    public LoginMsg(String name) {
+        super(LOGIN);
+        this.name = name;
+    }
+
 
     public void writeExternal(OutputStream out) throws IOException {
         super.writeExternal(out);

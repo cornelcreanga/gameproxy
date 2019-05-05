@@ -11,7 +11,11 @@ public class ServerConfig {
     @Value("${serverConfig.incoming.port}")
     private int incomingPort;
 
-    @Value("${serverConfig.outgoing.port}")
-    private int outgoingPort;
+    @Value("${serverConfig.realtime.port}")
+    private int realtimePort;
+
+    @Value("${serverConfig.history.port}")
+    private int historyPort;
+
 
 }

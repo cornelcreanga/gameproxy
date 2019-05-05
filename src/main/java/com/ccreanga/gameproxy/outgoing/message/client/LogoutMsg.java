@@ -14,8 +14,14 @@ public class LogoutMsg extends ClientMsg {
 
     private String name;
 
-    public LogoutMsg() {
+    LogoutMsg(){
         super(LOGOUT);
+    }
+
+
+    public LogoutMsg(String name) {
+        super(LOGOUT);
+        this.name = name;
     }
 
     public void writeExternal(OutputStream out) throws IOException {

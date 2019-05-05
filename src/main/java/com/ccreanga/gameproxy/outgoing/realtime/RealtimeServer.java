@@ -41,8 +41,8 @@ public class RealtimeServer implements Runnable {
             new ArrayBlockingQueue<>(128));
 
         try {
-            serverSocket = new ServerSocket(serverConfig.getOutgoingPort());
-            log.info("outgoing server started on {}", serverConfig.getOutgoingPort());
+            serverSocket = new ServerSocket(serverConfig.getRealtimePort());
+            log.info("outgoing server started on {}", serverConfig.getRealtimePort());
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);

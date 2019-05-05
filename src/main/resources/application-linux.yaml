@@ -2,10 +2,10 @@ spring:
   kafka:
     bootstrap-servers: 10.0.2.15:32769
     consumer:
-      group-id: group-id
+      group-id: history
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.LongSerializer
-      value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
@@ -13,9 +13,3 @@ spring:
         max.block.ms: 1000
     properties:
       request.timeout.ms: 100
-
-server:
-  incoming:
-    port: 8081
-  outgoing:
-    port: 8082

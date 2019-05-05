@@ -4,8 +4,8 @@ spring:
     consumer:
       group-id: history
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.LongSerializer
-      value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
@@ -17,8 +17,10 @@ spring:
 serverConfig:
   incoming:
     port: 8081
-  outgoing:
+  realtime:
     port: 8082
+  history:
+    port: 8083
 
 logging:
   pattern:

@@ -6,12 +6,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -22,6 +22,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class KafkaMessageConsumer {
 
     private final KafkaTemplate<Long, byte[]> kafkaTemplate;
@@ -37,7 +38,6 @@ public class KafkaMessageConsumer {
     public void consume(String topic,long startTimestamp,long endTimestamp, OutputStream out){
         AtomicBoolean stop = new AtomicBoolean(false);
         try (Consumer<Long, byte[]> consumer = factory.createConsumer()) {
-
             SeekToTimeOnRebalance seekToTimeOnRebalance = new SeekToTimeOnRebalance(consumer, startTimestamp);
             consumer.subscribe(Collections.singletonList(topic), seekToTimeOnRebalance);
 
@@ -49,10 +49,12 @@ public class KafkaMessageConsumer {
                     try {
                         byte[] value = record.value();
                         dataMsg.readExternal(new ByteArrayInputStream(value));
+                        //System.out.println(dataMsg.getMessage().getTimestamp());
                         if (dataMsg.getMessage().getTimestamp()>endTimestamp){
                             stop.set(true);
                             return;
                         }else {
+                            log.trace("Writing message from topic {}",topic);
                             out.write(value);
                         }
                     } catch (IOException e) {
@@ -87,7 +89,9 @@ public class KafkaMessageConsumer {
             // for each assigned partition, find the earliest offset in that partition with a timestamp
             // greater than or equal to the input timestamp
             Map<TopicPartition, OffsetAndTimestamp> outOffsets = consumer.offsetsForTimes(timestampsToSearch);
+            System.out.println(outOffsets);
             for (TopicPartition partition : partitions) {
+                System.out.println(outOffsets.get(partition).timestamp());
                 Long seekOffset = outOffsets.get(partition).offset();
                 Long currentPosition = consumer.position(partition);
                 // seek to the offset returned by the offsetsForTimes API

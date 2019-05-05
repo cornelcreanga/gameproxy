@@ -17,21 +17,21 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@AllArgsConstructor
 public class RealtimeConnectionProcessor {
 
-    Striped<ReadWriteLock> stripedLock = Striped.lazyWeakReadWriteLock(100);
+    private static Striped<ReadWriteLock> stripedLock = Striped.lazyWeakReadWriteLock(100);
 
-    @Autowired
-    private CustomerStorage customerStorage;
+    private LoginHandler loginHandler;
+    private LogoutHandler logoutHandler;
 
-    @Autowired
-    private CurrentSession currentSession;
 
     public void handleConnection(Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
@@ -40,9 +40,9 @@ public class RealtimeConnectionProcessor {
         //add it to register section
         while (true) {
             int a = in.read();
+            log.trace("message type {}",a);
             switch (a) {
                 case LOGIN:{
-                    LoginHandler loginHandler = new LoginHandler();
                     Optional<Customer> optional = loginHandler.handle(socket);
                     if (optional.isPresent())
                         customer = optional.get();
@@ -52,7 +52,6 @@ public class RealtimeConnectionProcessor {
                     break;
                 }
                 case LOGOUT:{
-                    LogoutHandler logoutHandler = new LogoutHandler();
                     logoutHandler.handle(socket,customer);
                     break;
                 }

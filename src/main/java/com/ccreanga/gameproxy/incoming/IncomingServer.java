@@ -28,7 +28,7 @@ public class IncomingServer implements Runnable {
 
         try {
             serverSocket = new ServerSocket(serverConfig.getIncomingPort());
-            log.info("outgoing server started on {}", serverConfig.getIncomingPort());
+            log.info("incoming server started on {}", serverConfig.getIncomingPort());
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);
@@ -38,7 +38,8 @@ public class IncomingServer implements Runnable {
                     //single threaded for the moment, to be redesigned if message processing will be time expensive
                     incomingConnectionProcessor.handleConnection(socket);
                 } catch (IOException e) {
-                    if (!e.getMessage().equals("Connection reset")) {
+                    String message = e.getMessage();
+                    if  ((message==null) || (!message.equals("Connection reset"))) {
                         e.printStackTrace();
                     }
                 } finally {

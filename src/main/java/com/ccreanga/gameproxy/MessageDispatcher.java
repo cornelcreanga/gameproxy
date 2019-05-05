@@ -17,7 +17,7 @@ public class MessageDispatcher {
     @Autowired
     private CustomerStorage customerStorage;
 
-    public List<Customer> getCustomers(IncomingMsg message) {
+    public List<Customer> getCustomersForDispatch(IncomingMsg message) {
         Set<Customer> customers = customerStorage.getCustomers();
         return customers.stream().
             filter(customer -> customer.hasMatch(message.getMatchId())).

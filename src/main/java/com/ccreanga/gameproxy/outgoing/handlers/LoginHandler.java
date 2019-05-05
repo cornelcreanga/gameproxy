@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,16 +28,14 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class LoginHandler {
 
-    static Striped<ReadWriteLock> stripedLock = Striped.lazyWeakReadWriteLock(100);
+    private static Striped<ReadWriteLock> stripedLock = Striped.lazyWeakReadWriteLock(100);
 
-    @Autowired
     private CustomerStorage customerStorage;
 
-    @Autowired
     private CurrentSession currentSession;
-
 
     public Optional<Customer> handle(Socket socket) throws IOException {
 

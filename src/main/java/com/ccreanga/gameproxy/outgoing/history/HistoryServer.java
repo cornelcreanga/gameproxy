@@ -42,8 +42,8 @@ public class HistoryServer implements Runnable {
 
 
         try {
-            serverSocket = new ServerSocket(serverConfig.getOutgoingPort());
-            log.info("outgoing server started on {}", serverConfig.getOutgoingPort());
+            serverSocket = new ServerSocket(serverConfig.getHistoryPort());
+            log.info("history server started on {}", serverConfig.getHistoryPort());
             while (!isStopped) {
                 Socket socket = serverSocket.accept();
                 socket.setTcpNoDelay(true);

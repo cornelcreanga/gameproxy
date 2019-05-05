@@ -24,9 +24,8 @@ public class RealtimeWriter implements Runnable {
     @Override
     public void run() {
         while (!stopped) {
-            ServerMsg message = null;
             try {
-                message = messages.take();
+                ServerMsg message = messages.take();
                 log.trace("Consumed the message type {} from the queue", message.getType());
                 OutputStream out = socket.getOutputStream();
                 message.writeExternal(out);

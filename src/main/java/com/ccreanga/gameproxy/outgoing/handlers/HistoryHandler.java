@@ -1,6 +1,7 @@
 package com.ccreanga.gameproxy.outgoing.handlers;
 
 import com.ccreanga.gameproxy.kafka.KafkaMessageConsumer;
+import com.ccreanga.gameproxy.outgoing.message.client.HistoryDataMsg;
 import com.ccreanga.gameproxy.util.IOUtil;
 import java.io.IOException;
 import java.net.Socket;
@@ -15,9 +16,9 @@ public class HistoryHandler {
 
     private KafkaMessageConsumer consumer;
 
-    public void handle(String topic,long startTimestamp,long endTimestamp, Socket socket)  throws IOException{
-        log.info("ClientHistoryMessage {} {} {}", topic,startTimestamp,endTimestamp);
-        consumer.consume(topic,startTimestamp,endTimestamp,socket.getOutputStream());
+    public void handle(String topic, Socket socket, HistoryDataMsg message)  throws IOException{
+        log.info("ClientHistoryMessage {} {} {}", topic,message.getStartTimestamp(),message.getEndTimestamp());
+        consumer.consume(topic,message.getStartTimestamp(),message.getEndTimestamp(),socket.getOutputStream());
 
         IOUtil.closeSocketPreventingReset(socket);
 

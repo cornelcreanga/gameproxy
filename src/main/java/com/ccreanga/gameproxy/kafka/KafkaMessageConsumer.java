@@ -45,12 +45,11 @@ public class KafkaMessageConsumer {
                 ConsumerRecords<Long, byte[]> consumerRecords = consumer.poll(Duration.ofSeconds(1));
 
                 consumerRecords.forEach(record -> {
-                    DataMsg dataMsg = new DataMsg();
                     try {
                         byte[] value = record.value();
-                        dataMsg.readExternal(new ByteArrayInputStream(value));
+                        DataMsg dataMsg = DataMsg.readExternal(new ByteArrayInputStream(value));
                         //System.out.println(dataMsg.getMessage().getTimestamp());
-                        if (dataMsg.getMessage().getTimestamp()>endTimestamp){
+                        if (dataMsg.getTimestamp()>endTimestamp){
                             stop.set(true);
                             return;
                         }else {

@@ -1,6 +1,6 @@
 package com.ccreanga.it;
 
-import com.ccreanga.gameproxy.incoming.IncomingMsg;
+import com.ccreanga.gameproxy.incoming.MatchMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +31,7 @@ public class Producer {
     }
 
     public void produce(UUID id, long matchId, String message,long timestamp) throws IOException {
-        IncomingMsg incomingMessage = new IncomingMsg(id, matchId, message.getBytes(), timestamp);
+        MatchMsg incomingMessage = new MatchMsg(id, matchId, message.getBytes(), timestamp);
         incomingMessage.writeExternal(out);
         out.flush();
     }

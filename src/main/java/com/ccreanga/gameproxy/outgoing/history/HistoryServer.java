@@ -54,7 +54,7 @@ public class HistoryServer implements Runnable {
                             //keep the connection open unless close/not authorized
                             historyConnectionProcessor.handleConnection(socket);
                             IOUtil.closeSocketPreventingReset(socket);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             if (!e.getMessage().equals("Connection reset")) {
                                 e.printStackTrace();
                             }

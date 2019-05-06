@@ -1,15 +1,14 @@
 package com.ccreanga.it;
 
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.HISTORICAL_DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMsg.DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.ServerMsg.LOGIN_RESULT;
 import static org.junit.Assert.assertEquals;
 
 import com.ccreanga.gameproxy.outgoing.message.client.HistoryDataMsg;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
 import com.ccreanga.gameproxy.outgoing.message.client.LogoutMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
+import com.ccreanga.gameproxy.outgoing.message.MessageIO;
+import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -40,14 +39,11 @@ public class Client {
         return name;
     }
 
-    public LoginResultMsg login() {
+    public InfoMsg login() {
         try {
-            new LoginMsg(name).writeExternal(out);
-            int messageType = in.read();
-            assertEquals(messageType, LOGIN_RESULT);
-            LoginResultMsg ackMessage = new LoginResultMsg();
-            ackMessage.readExternal(in);
-            return ackMessage;
+            MessageIO.serializeClientMsg(new LoginMsg(name),out);
+            InfoMsg infoMsg = (InfoMsg)MessageIO.deSerializeServerMsg(in).get();
+            return infoMsg;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,7 +53,7 @@ public class Client {
     public void askForHistory(long startTimestamp, long endTimestamp){
         try {
             HistoryDataMsg message = new HistoryDataMsg(startTimestamp,endTimestamp);
-            message.writeExternal(out);
+            MessageIO.serializeClientMsg(message,out);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -66,22 +62,15 @@ public class Client {
 
     public void logout() {
         try {
-            new LogoutMsg(name).writeExternal(out);
+            MessageIO.serializeClientMsg(new LogoutMsg(name),out);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Optional<DataMsg> readMessage() {
+    public Optional<ServerMsg> readMessage() {
         try {
-            int messageType = in.read();
-            if (messageType==-1){
-                return Optional.empty();
-            }
-            assertEquals(messageType, DATA);
-            DataMsg dataMessage = new DataMsg();
-            dataMessage.readExternal(in);
-            return Optional.of(dataMessage);
+            return MessageIO.deSerializeServerMsg(in);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -54,7 +54,7 @@ public class RealtimeServer implements Runnable {
                             //keep the connection open unless close/not authorized
                             outgoingConnectionProcessor.handleConnection(socket);
                             IOUtil.closeSocketPreventingReset(socket);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             if (!e.getMessage().equals("Connection reset")) {
                                 e.printStackTrace();
                             }

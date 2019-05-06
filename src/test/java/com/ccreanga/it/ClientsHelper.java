@@ -3,7 +3,7 @@ package com.ccreanga.it;
 import static org.junit.Assert.assertEquals;
 
 import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.HashMap;
@@ -20,8 +20,8 @@ public class ClientsHelper {
 
         threadPool.submit(
             () -> clients.parallelStream().forEach(client -> {
-                LoginResultMsg message = client.login();
-                assertEquals(message.getResult(), LoginResultMsg.AUTHORIZED);
+                InfoMsg message = client.login();
+                assertEquals(message.getCode(), InfoMsg.AUTHORIZED);
                 latch.countDown();
             }));
 

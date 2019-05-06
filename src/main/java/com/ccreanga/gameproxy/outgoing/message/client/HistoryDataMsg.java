@@ -10,30 +10,33 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class HistoryDataMsg extends ClientMsg {
+public class HistoryDataMsg implements ClientMsg {
 
     private long startTimestamp;//go back in time
     private long endTimestamp;//go back in time
 
     HistoryDataMsg(){
-        super(HISTORICAL_DATA);
     }
 
     public HistoryDataMsg(long startTimestamp, long endTimestamp) {
-        super(HISTORICAL_DATA);
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
     }
 
     public void writeExternal(OutputStream out) throws IOException {
-        super.writeExternal(out);
         writeLong(out, startTimestamp);
         writeLong(out, endTimestamp);
     }
 
-    public void readExternal(InputStream in) throws IOException {
-        startTimestamp = readLong(in);
-        endTimestamp = readLong(in);
+    public static HistoryDataMsg readExternal(InputStream in) throws IOException {
+        HistoryDataMsg msg = new HistoryDataMsg();
+        msg.startTimestamp = readLong(in);
+        msg.endTimestamp = readLong(in);
+        return msg;
+    }
+
+    @Override
+    public int getType() {
+        return ClientMsg.HISTORICAL_DATA;
     }
 }

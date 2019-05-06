@@ -1,11 +1,10 @@
 package com.ccreanga.gameproxy.kafka;
 
-import com.ccreanga.gameproxy.incoming.IncomingMsg;
+import com.ccreanga.gameproxy.incoming.MatchMsg;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Async;
@@ -26,7 +25,7 @@ public class KafkaMessageProducer {
     }
 
     @Async
-    public void sendAsynchToKafka(String topic, IncomingMsg message) throws IOException {
+    public void sendAsynchToKafka(String topic, MatchMsg message) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(128);
         message.writeExternal(baos);
         ProducerRecord<Long, byte[]> record = new ProducerRecord<>(topic, message.getMatchId(), baos.toByteArray());

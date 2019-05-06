@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomingMsg {
+public class MatchMsg {
 
     private UUID id;
     private long matchId;
@@ -40,8 +40,8 @@ public class IncomingMsg {
         writeLong(out, timestamp);
     }
 
-    public static IncomingMsg readExternal(InputStream in) throws IOException {
-        IncomingMsg m = new IncomingMsg();
+    public static MatchMsg readExternal(InputStream in) throws IOException {
+        MatchMsg m = new MatchMsg();
         long msb, lsb;
 
         msb = readLong(in);

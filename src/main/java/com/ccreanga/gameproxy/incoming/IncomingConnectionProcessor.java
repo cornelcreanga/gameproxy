@@ -36,7 +36,7 @@ public class IncomingConnectionProcessor {
     public void handleConnection(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();
         while(true) {//todo
-            IncomingMsg message = IncomingMsg.readExternal(input);
+            MatchMsg message = MatchMsg.readExternal(input);
             log.trace("IncomingMessage " + message.toString());
 
             List<Customer> customers = messageDispatcher.getCustomersForDispatch(message);

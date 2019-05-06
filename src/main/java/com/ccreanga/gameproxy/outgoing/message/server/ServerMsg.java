@@ -4,25 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class ServerMsg {
+public interface ServerMsg {
 
-    public static final short LOGIN_RESULT = 1;
-    public static final short DATA = 2;
-    public static final short INFO = 3;
+    public static final short DATA = 1;
+    public static final short INFO = 2;
+    public static final short DATA_END = 3;
 
-    protected int messageType;
 
-    public ServerMsg(int messageType) {
-        this.messageType = messageType;
-    }
+    public void writeExternal(OutputStream out) throws IOException;
 
-    public void writeExternal(OutputStream out) throws IOException {
-        out.write(messageType);
-    }
-
-    public abstract void readExternal(InputStream in) throws IOException;
-
-    public int getType() {
-        return messageType;
-    }
+    public int getType();
 }

@@ -9,37 +9,38 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class LoginMsg extends ClientMsg {
+public class LoginMsg implements ClientMsg {
 
     private String name;
 
-    LoginMsg(){
-        super(LOGIN);
+    private LoginMsg(){
     }
 
     public LoginMsg(String name) {
-        super(LOGIN);
         this.name = name;
     }
 
-
     public void writeExternal(OutputStream out) throws IOException {
-        super.writeExternal(out);
         byte[] b = name.getBytes();
         out.write(b.length);
         out.write(b);
     }
 
-    public void readExternal(InputStream in) throws IOException {
-
+    public static LoginMsg readExternal(InputStream in) throws IOException {
+        LoginMsg msg = new LoginMsg();
         int a = in.read();
         if ((a>0) && (a<100)) {
             byte[] n = new byte[a];
             readFully(in, n);
-            name = new String(n);
+            msg.name = new String(n);
         }else{
             throw new MalformedException("message too long " + a, "NAME_TOO_LONG");
         }
+        return msg;
+    }
+
+    @Override
+    public int getType() {
+        return ClientMsg.LOGIN;
     }
 }

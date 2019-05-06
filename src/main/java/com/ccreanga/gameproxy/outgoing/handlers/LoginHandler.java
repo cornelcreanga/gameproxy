@@ -1,16 +1,12 @@
 package com.ccreanga.gameproxy.outgoing.handlers;
 
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsgFactory.loginMsg;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.ALREADY_AUTHENTICATED;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.AUTHORIZED;
-import static com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg.UNAUTHORIZED;
 
 import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.CustomerSessionStatus;
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.LoginResultMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.google.common.util.concurrent.Striped;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,15 +33,15 @@ public class LoginHandler {
 
     private CurrentSession currentSession;
 
-    public Optional<Customer> handle(Socket socket) throws IOException {
+    public Optional<Customer> handle(Socket socket,LoginMsg message) throws IOException {
 
         Customer customer;
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
 
-        LoginMsg message = loginMsg(in);
 
-        LoginResultMsg resultMessage;
+
+        InfoMsg resultMessage;
         String name = message.getName();
         log.info("ClientLoginMessage {}", name);
 
@@ -57,18 +53,18 @@ public class LoginHandler {
             Optional<Customer> optional = customers.stream().filter(c -> c.getName().equals(name)).findAny();
             if (optional.isEmpty()) {
                 log.info("Not authorized");
-                resultMessage = new LoginResultMsg(UNAUTHORIZED);
+                resultMessage = new InfoMsg(InfoMsg.UNAUTHORIZED);
                 resultMessage.writeExternal(out);
                 return Optional.empty();
             }
             customer = optional.get();
             CustomerSessionStatus status = currentSession.login(customer, socket);
             if (status.isAlreadyLoggedIn()) {
-                resultMessage = new LoginResultMsg(ALREADY_AUTHENTICATED);
+                resultMessage = new InfoMsg(InfoMsg.ALREADY_AUTHENTICATED);
                 log.info("Already authorized.");
             } else {
                 log.info("Authorized");
-                resultMessage = new LoginResultMsg(AUTHORIZED);
+                resultMessage = new InfoMsg(InfoMsg.AUTHORIZED);
             }
 
             resultMessage.writeExternal(out);

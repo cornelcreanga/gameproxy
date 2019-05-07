@@ -35,17 +35,17 @@ public class FlowTest {
         producer.produce(uuid1, 2L, "some message");
         producer.produce(uuid2, 1L, "some message");
 
-        Optional<DataMsg> dataMsg;
-        dataMsg = clients[0].readMessage();
-        dataMsg = clients[1].readMessage();
-        dataMsg = clients[3].readMessage();
-        dataMsg = clients[4].readMessage();
+        DataMsg dataMsg;
+        dataMsg = clients[0].readDataMessage();
+        dataMsg = clients[1].readDataMessage();
+        dataMsg = clients[3].readDataMessage();
+        dataMsg = clients[4].readDataMessage();
 
-        dataMsg = clients[0].readMessage();
-        dataMsg = clients[1].readMessage();
-        dataMsg = clients[2].readMessage();
-        dataMsg = clients[3].readMessage();
-        dataMsg = clients[4].readMessage();
+        dataMsg = clients[0].readDataMessage();
+        dataMsg = clients[1].readDataMessage();
+        dataMsg = clients[2].readDataMessage();
+        dataMsg = clients[3].readDataMessage();
+        dataMsg = clients[4].readDataMessage();
 
 
 

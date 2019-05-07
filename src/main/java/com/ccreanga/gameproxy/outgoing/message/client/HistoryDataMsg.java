@@ -1,13 +1,11 @@
 package com.ccreanga.gameproxy.outgoing.message.client;
 
-import static com.ccreanga.gameproxy.util.IOUtil.readLong;
-import static com.ccreanga.gameproxy.util.IOUtil.writeLong;
-
+import com.ccreanga.gameproxy.util.FastDataInputStream;
+import com.ccreanga.gameproxy.util.FastDataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 public class HistoryDataMsg implements ClientMsg {
@@ -23,15 +21,16 @@ public class HistoryDataMsg implements ClientMsg {
         this.endTimestamp = endTimestamp;
     }
 
-    public void writeExternal(OutputStream out) throws IOException {
-        writeLong(out, startTimestamp);
-        writeLong(out, endTimestamp);
+    public void writeExternal(OutputStream outputStream) throws IOException {
+        FastDataOutputStream out = new FastDataOutputStream(outputStream);
+        out.writeLongs(startTimestamp,endTimestamp);
     }
 
-    public static HistoryDataMsg readExternal(InputStream in) throws IOException {
+    public static HistoryDataMsg readExternal(InputStream inputStream) throws IOException {
+        FastDataInputStream in = new FastDataInputStream(inputStream);
         HistoryDataMsg msg = new HistoryDataMsg();
-        msg.startTimestamp = readLong(in);
-        msg.endTimestamp = readLong(in);
+        msg.startTimestamp = in.readLong();
+        msg.endTimestamp = in.readLong();
         return msg;
     }
 

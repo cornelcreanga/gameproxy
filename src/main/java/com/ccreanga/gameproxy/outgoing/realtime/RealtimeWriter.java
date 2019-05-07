@@ -1,6 +1,7 @@
 package com.ccreanga.gameproxy.outgoing.realtime;
 
 import com.ccreanga.gameproxy.Customer;
+import com.ccreanga.gameproxy.outgoing.message.MessageIO;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -28,7 +29,7 @@ public class RealtimeWriter implements Runnable {
                 ServerMsg message = messages.take();
                 log.trace("Consumed the message type {} from the queue", message.getType());
                 OutputStream out = socket.getOutputStream();
-                message.writeExternal(out);
+                MessageIO.serializeServerMsg(message,out);
                 out.flush();
                 log.trace("Wrote the message type {} to customer {}", message.getType(), customer.getName());
             } catch (Exception e) {

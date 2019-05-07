@@ -64,15 +64,13 @@ public class HistoryConnectionProcessor {
                         return;
                     } else {
                         if (historicalDataProcessing){
-                            InfoMsg info = new InfoMsg(HISTORY_ALREADY_STARTED);
-                            info.writeExternal(out);
+                            MessageIO.serializeServerMsg(new InfoMsg(HISTORY_ALREADY_STARTED),out);
                             break;
                         }
                         historicalDataProcessing = true;
                         HistoryDataMsg message = (HistoryDataMsg)msg;
                         if ((message.getStartTimestamp()<=0) || (message.getEndTimestamp()<message.getStartTimestamp())){
-                            InfoMsg info = new InfoMsg(HISTORY_BAD_INTERVAL);
-                            info.writeExternal(out);
+                            MessageIO.serializeServerMsg(new InfoMsg(HISTORY_BAD_INTERVAL),out);
                             break;
                         }
                         historyHandler.handle(customer.getName(),socket,message);

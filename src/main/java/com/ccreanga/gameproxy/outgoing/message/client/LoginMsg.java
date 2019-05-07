@@ -1,12 +1,11 @@
 package com.ccreanga.gameproxy.outgoing.message.client;
 
-import static com.ccreanga.gameproxy.util.IOUtil.readFully;
-
+import com.ccreanga.gameproxy.util.FastDataInputStream;
+import com.ccreanga.gameproxy.util.FastDataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 public class LoginMsg implements ClientMsg {
@@ -20,22 +19,16 @@ public class LoginMsg implements ClientMsg {
         this.name = name;
     }
 
-    public void writeExternal(OutputStream out) throws IOException {
-        byte[] b = name.getBytes();
-        out.write(b.length);
-        out.write(b);
+    public void writeExternal(OutputStream outputStream) throws IOException {
+        FastDataOutputStream out = new FastDataOutputStream(outputStream);
+        out.writeString(name,"UTF-8");
     }
 
-    public static LoginMsg readExternal(InputStream in) throws IOException {
+    public static LoginMsg readExternal(InputStream inputStream) throws IOException {
+        FastDataInputStream in = new FastDataInputStream(inputStream);
         LoginMsg msg = new LoginMsg();
-        int a = in.read();
-        if ((a>0) && (a<100)) {
-            byte[] n = new byte[a];
-            readFully(in, n);
-            msg.name = new String(n);
-        }else{
-            throw new MalformedException("message too long " + a, "NAME_TOO_LONG");
-        }
+        msg.name = in.readString("UTF-8");
+        //todo throw new MalformedException("message too long " + a, "NAME_TOO_LONG");
         return msg;
     }
 

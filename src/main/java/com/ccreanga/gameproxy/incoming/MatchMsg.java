@@ -1,9 +1,7 @@
 package com.ccreanga.gameproxy.incoming;
 
-import static com.ccreanga.gameproxy.util.IOUtil.readFully;
-import static com.ccreanga.gameproxy.util.IOUtil.readLong;
-import static com.ccreanga.gameproxy.util.IOUtil.writeLong;
-
+import com.ccreanga.gameproxy.util.FastDataInputStream;
+import com.ccreanga.gameproxy.util.FastDataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,45 +13,33 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MatchMsg {
+public class MatchMsg implements IncomingMsg{
 
     private UUID id;
     private long matchId;
     private byte[] message;
     private long timestamp;
 
-    public void writeExternal(OutputStream out) throws IOException {
-        long msb = id.getMostSignificantBits();
-        long lsb = id.getLeastSignificantBits();
-        writeLong(out, msb);
-        writeLong(out, lsb);
-
-        writeLong(out, matchId);
-
-        if (message!=null){
-            out.write(message.length);
-            out.write(message);
-        }else{
-            out.write(0);
-        }
-
-        writeLong(out, timestamp);
+    public void writeExternal(OutputStream outputStream) throws IOException {
+        FastDataOutputStream out = new FastDataOutputStream(outputStream);
+        out.writeUUID(id);
+        out.writeLong(matchId);
+        out.writeByteArray(message);
+        out.writeLong(timestamp);
     }
 
-    public static MatchMsg readExternal(InputStream in) throws IOException {
-        MatchMsg m = new MatchMsg();
-        long msb, lsb;
+    @Override
+    public int getType() {
+        return IncomingMsg.MATCH;
+    }
 
-        msb = readLong(in);
-        lsb = readLong(in);
-        m.id = new UUID(msb, lsb);
-        m.matchId = readLong(in);
-        int a = in.read();
-        if (a!=0) {
-            m.message = new byte[a];
-            readFully(in, m.message);
-        }
-        m.timestamp = readLong(in);
+    public static MatchMsg readExternal(InputStream inputStream) throws IOException {
+        MatchMsg m = new MatchMsg();
+        FastDataInputStream in = new FastDataInputStream(inputStream);
+        m.id = in.readUUID();
+        m.matchId = in.readLong();
+        m.message=in.readByteArray();
+        m.timestamp = in.readLong();
         return m;
     }
 

@@ -5,6 +5,7 @@ import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.CustomerSessionStatus;
 import com.ccreanga.gameproxy.gateway.CustomerStorage;
+import com.ccreanga.gameproxy.outgoing.message.MessageIO;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.google.common.util.concurrent.Striped;
@@ -53,8 +54,7 @@ public class LoginHandler {
             Optional<Customer> optional = customers.stream().filter(c -> c.getName().equals(name)).findAny();
             if (optional.isEmpty()) {
                 log.info("Not authorized");
-                resultMessage = new InfoMsg(InfoMsg.UNAUTHORIZED);
-                resultMessage.writeExternal(out);
+                MessageIO.serializeServerMsg(new InfoMsg(InfoMsg.UNAUTHORIZED),out);
                 return Optional.empty();
             }
             customer = optional.get();
@@ -67,9 +67,12 @@ public class LoginHandler {
                 resultMessage = new InfoMsg(InfoMsg.AUTHORIZED);
             }
 
-            resultMessage.writeExternal(out);
+            MessageIO.serializeServerMsg(resultMessage,out);
             return optional;
-        } finally {
+        } catch (Exception e) {
+            throw new RuntimeException(e);//todo
+
+    } finally {
             customerLock.unlock();
         }
     }

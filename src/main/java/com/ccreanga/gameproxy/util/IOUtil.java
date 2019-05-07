@@ -38,50 +38,6 @@ public class IOUtil {
     }
 
 
-    public static void readFully(InputStream in, byte b[]) throws IOException {
-        readFully(in, b, 0, b.length);
-    }
-
-    public static void readFully(InputStream in, byte b[], int off, int len) throws IOException {
-        if (len < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-        int n = 0;
-        while (n < len) {
-            int count = in.read(b, off + n, len - n);
-            if (count < 0) {
-                throw new EOFException();
-            }
-            n += count;
-        }
-    }
-
-    public static long readLong(InputStream in) throws IOException {
-        byte[] readBuffer = new byte[8];
-        readFully(in, readBuffer);
-        return (((long) readBuffer[0] << 56) +
-            ((long) (readBuffer[1] & 255) << 48) +
-            ((long) (readBuffer[2] & 255) << 40) +
-            ((long) (readBuffer[3] & 255) << 32) +
-            ((long) (readBuffer[4] & 255) << 24) +
-            ((readBuffer[5] & 255) << 16) +
-            ((readBuffer[6] & 255) << 8) +
-            ((readBuffer[7] & 255) << 0));
-    }
-
-    public static void writeLong(OutputStream out, long v) throws IOException {
-        byte[] writeBuffer = new byte[8];
-        writeBuffer[0] = (byte) (v >>> 56);
-        writeBuffer[1] = (byte) (v >>> 48);
-        writeBuffer[2] = (byte) (v >>> 40);
-        writeBuffer[3] = (byte) (v >>> 32);
-        writeBuffer[4] = (byte) (v >>> 24);
-        writeBuffer[5] = (byte) (v >>> 16);
-        writeBuffer[6] = (byte) (v >>> 8);
-        writeBuffer[7] = (byte) (v >>> 0);
-        out.write(writeBuffer, 0, 8);
-    }
-
     public static String getIp(Socket socket) {
         return socket.getRemoteSocketAddress().toString();
     }

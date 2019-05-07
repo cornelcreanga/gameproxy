@@ -2,8 +2,10 @@ package com.ccreanga.it;
 
 import static org.junit.Assert.assertEquals;
 
+import com.ccreanga.gameproxy.outgoing.message.server.DataEndMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
+import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.HashMap;
@@ -52,10 +54,13 @@ public class ClientsHelper {
             () -> clients.parallelStream().forEach(client -> {
 
                 while(true){
-                    Optional<DataMsg> dataMsg = client.readMessage();
+                    Optional<ServerMsg> dataMsg = client.readMessage();
                     if (dataMsg.isEmpty())
                         break;
-                    values.put(client,dataMsg.get());
+                    ServerMsg message = dataMsg.get();
+                    if (message instanceof DataEndMsg)
+                        break;
+                    values.put(client,(DataMsg) message);
                 }
 
             }));

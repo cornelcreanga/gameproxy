@@ -6,6 +6,7 @@ import com.ccreanga.gameproxy.outgoing.message.client.HistoryDataMsg;
 import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
 import com.ccreanga.gameproxy.outgoing.message.client.LogoutMsg;
 import com.ccreanga.gameproxy.outgoing.message.MessageIO;
+import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 
@@ -74,7 +75,21 @@ public class Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public DataMsg readDataMessage(){
+        Optional<ServerMsg> optional = null;
+        try {
+            optional = MessageIO.deSerializeServerMsg(in);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (optional.isEmpty())
+            throw new RuntimeException("end of data reached");
+        ServerMsg message = optional.get();
+        if (message instanceof DataMsg)
+            return (DataMsg)message;
+        throw new RuntimeException("expected DataMsg, received "+message.getClass());
     }
 
 

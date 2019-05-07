@@ -1,15 +1,14 @@
 package com.ccreanga.gameproxy.outgoing.message.server;
 
 import com.ccreanga.gameproxy.incoming.MatchMsg;
+import com.ccreanga.gameproxy.util.FastDataInputStream;
+import com.ccreanga.gameproxy.util.FastDataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
 import lombok.Data;
-
-import static com.ccreanga.gameproxy.util.IOUtil.*;
-import static com.ccreanga.gameproxy.util.IOUtil.writeLong;
 
 @Data
 public class DataMsg implements ServerMsg {
@@ -29,22 +28,12 @@ public class DataMsg implements ServerMsg {
         timestamp = msg.getTimestamp();
     }
 
-    public void writeExternal(OutputStream out) throws IOException {
-        long msb = id.getMostSignificantBits();
-        long lsb = id.getLeastSignificantBits();
-        writeLong(out, msb);
-        writeLong(out, lsb);
-
-        writeLong(out, matchId);
-
-        if (message!=null){
-            out.write(message.length);
-            out.write(message);
-        }else{
-            out.write(0);
-        }
-
-        writeLong(out, timestamp);
+    public void writeExternal(OutputStream outputStream) throws IOException {
+        FastDataOutputStream out = new FastDataOutputStream(outputStream);
+        out.writeUUID(id);
+        out.writeLong(matchId);
+        out.writeByteArray(message);
+        out.writeLong(timestamp);
     }
 
     @Override
@@ -52,20 +41,13 @@ public class DataMsg implements ServerMsg {
         return ServerMsg.DATA;
     }
 
-    public static DataMsg readExternal(InputStream in) throws IOException {
+    public static DataMsg readExternal(InputStream inputStream) throws IOException {
         DataMsg m = new DataMsg();
-        long msb, lsb;
-
-        msb = readLong(in);
-        lsb = readLong(in);
-        m.id = new UUID(msb, lsb);
-        m.matchId = readLong(in);
-        int a = in.read();
-        if (a!=0) {
-            m.message = new byte[a];
-            readFully(in, m.message);
-        }
-        m.timestamp = readLong(in);
+        FastDataInputStream in = new FastDataInputStream(inputStream);
+        m.id = in.readUUID();
+        m.matchId = in.readLong();
+        m.message=in.readByteArray();
+        m.timestamp = in.readLong();
         return m;
     }
 }

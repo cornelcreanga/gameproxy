@@ -1,6 +1,7 @@
 package com.ccreanga.gameproxy.outgoing.message;
 
 import com.ccreanga.gameproxy.outgoing.message.client.*;
+import com.ccreanga.gameproxy.outgoing.message.server.DataEndMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
@@ -41,6 +42,8 @@ public class MessageIO {
         switch (type){
             case ServerMsg.DATA: return Optional.of(DataMsg.readExternal(in));
             case ServerMsg.INFO:return Optional.of(InfoMsg.readExternal(in));
+            case ServerMsg.DATA_END:return Optional.of(DataEndMsg.readExternal(in));
+
             case -1:return Optional.empty();
             default:throw new MalformedException("can't parse message type "+type,"bad_message_type");
         }

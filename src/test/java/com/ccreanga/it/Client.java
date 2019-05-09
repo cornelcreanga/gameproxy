@@ -21,6 +21,8 @@ public class Client {
     private Socket socket;
     private OutputStream out;
     private InputStream in;
+    private Thread mainThread;
+
 
     public Client(String name, String ip, int port) {
         this.name = name;
@@ -29,11 +31,9 @@ public class Client {
             socket.setSoTimeout(50000);
             out = socket.getOutputStream();
             in = socket.getInputStream();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public String getName() {

@@ -19,12 +19,14 @@ public class TestClient {
             consumers[i] = consumer;
             new Thread(consumers[i]).start();
         }
-
+        long t1=System.currentTimeMillis();
         Producer producer = new Producer("127.0.0.1", 8081);
         for (int i = 0; i <1000000 ; i++) {
             UUID uuid1 = UUID.randomUUID();
             producer.produce(uuid1, 1L, "some message "+i);
         }
+        long t2=System.currentTimeMillis();
+        System.out.println("producing in "+(t2-t1));
 
 //        for (int i = 0; i < 5; i++) {
 //            consumers[i].stop();

@@ -7,6 +7,8 @@ import com.ccreanga.gameproxy.MessageDispatcher;
 import com.ccreanga.gameproxy.kafka.KafkaMessageProducer;
 import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -35,16 +37,28 @@ public class IncomingConnectionProcessor {
 
     public void handleConnection(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();
+        IncomingMsg message;
         while(true) {//todo
-            MatchMsg message = MatchMsg.readExternal(input);
+            try {
+                int type = input.read();
+                switch(type){
+                    case IncomingMsg.MATCH: message = MatchMsg.readExternal(input);break;
+                    case IncomingMsg.STOP: message = StopMsg.readExternal(input);break;
+                    default:throw new RuntimeException("unknown message type "+type);
+                }
+            }catch (EOFException e){
+                return;
+            }
             log.trace("IncomingMessage " + message.toString());
+            if (message instanceof StopMsg)
+                return;
 
-            List<Customer> customers = messageDispatcher.getCustomersForDispatch(message);
+            List<Customer> customers = messageDispatcher.getCustomersForDispatch((MatchMsg)message);
             if (log.isTraceEnabled()) {
                 log.trace("Customers that are registered for this message {}", Arrays.toString(customers.toArray()));
             }
             for (Customer customer : customers) {
-                kafkaMessageProducer.sendAsynchToKafka(customer.getName(), message);
+                kafkaMessageProducer.sendAsynchToKafka(customer.getName(), (MatchMsg)message);
                 CustomerSession customerSession = currentSession.getCustomerSession(customer);
                 if (customerSession == null) {
                     log.trace("Customer {} is offline", customer.getName());
@@ -55,7 +69,7 @@ public class IncomingConnectionProcessor {
                     if (queue != null) {
                         try {
                             log.trace("Add message to queue");
-                            queue.add(new DataMsg(message));
+                            queue.add(new DataMsg((MatchMsg)message));
                         } catch (IllegalStateException e) {
                             //todo - queue is full, handle this case
                         }

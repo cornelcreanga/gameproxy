@@ -6,6 +6,7 @@ import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -16,12 +17,12 @@ public class MessageIO {
     public static final short LOGOUT = 2;
     public static final short HISTORICAL_DATA = 3;
 
-    public static void serializeClientMsg(ClientMsg clientMsg, OutputStream out) throws Exception{
+    public static void serializeClientMsg(ClientMsg clientMsg, OutputStream out) throws IOException{
         out.write(clientMsg.getType());
         clientMsg.writeExternal(out);
     }
 
-    public static Optional<ClientMsg> deSerializeClientMsg(InputStream in) throws Exception{
+    public static Optional<ClientMsg> deSerializeClientMsg(InputStream in) throws IOException {
         int type = in.read();
         switch (type){
             case ClientMsg.LOGIN: return Optional.of(LoginMsg.readExternal(in));
@@ -32,12 +33,12 @@ public class MessageIO {
         }
     }
 
-    public static void serializeServerMsg(ServerMsg serverMsg, OutputStream out) throws Exception{
+    public static void serializeServerMsg(ServerMsg serverMsg, OutputStream out) throws IOException{
         out.write(serverMsg.getType());
         serverMsg.writeExternal(out);
     }
 
-    public static Optional<ServerMsg> deSerializeServerMsg(InputStream in) throws Exception{
+    public static Optional<ServerMsg> deSerializeServerMsg(InputStream in) throws IOException{
         int type = in.read();
         switch (type){
             case ServerMsg.DATA: return Optional.of(DataMsg.readExternal(in));

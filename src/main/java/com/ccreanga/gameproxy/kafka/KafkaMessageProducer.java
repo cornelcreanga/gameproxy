@@ -33,12 +33,14 @@ public class KafkaMessageProducer {
 
         future.addCallback(new ListenableFutureCallback<>() {
             public void onSuccess(SendResult<Long, byte[]> result) {
-                log.trace("Message sent succesfully to topic {}", topic);
+                if (log.isTraceEnabled())
+                    log.trace("Message sent succesfully to topic {}", topic);
                 //todo - handle success
             }
 
             public void onFailure(Throwable ex) {
-                log.trace("Message ent failure, exception {}, topic {}", ex.getMessage(), topic);
+                if (log.isTraceEnabled())
+                    log.trace("Message ent failure, exception {}, topic {}", ex.getMessage(), topic);
                 //todo - handle failure
             }
         });

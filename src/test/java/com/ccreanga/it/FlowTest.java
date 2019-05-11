@@ -30,10 +30,13 @@ public class FlowTest {
         ClientsHelper.login(threadPool, Arrays.asList(clients));
 
         Producer producer = new Producer("127.0.0.1", 8081);
+
+
         UUID uuid1 = UUID.randomUUID();
         UUID uuid2 = UUID.randomUUID();
         producer.produce(uuid1, 2L, "some message");
         producer.produce(uuid2, 1L, "some message");
+        Thread.sleep(1000);
 
         DataMsg dataMsg;
         dataMsg = clients[0].readDataMessage();

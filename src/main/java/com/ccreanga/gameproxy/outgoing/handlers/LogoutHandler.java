@@ -25,9 +25,8 @@ public class LogoutHandler {
 
     public void handle(Socket socket, Customer customer, LogoutMsg message) throws IOException {
 
-        OutputStream out = socket.getOutputStream();
         if (customer==null) {//ignore
-            log.info("no customer logged in, can't logout");
+            log.warn("no customer logged in for this connection, can't logout");
         } else {
             currentSession.logout(customer);
         }

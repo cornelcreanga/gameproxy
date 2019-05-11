@@ -28,7 +28,7 @@ public class CurrentSession {
         if (customerSession != null) {
             return new CustomerSessionStatus(customerSession, true);
         } else {
-            outgoingSender.createConsumer(customer, socket, newSession.getMessageQueues());
+            outgoingSender.createConsumer(this,customer, socket, newSession.getMessageQueues());
             log.trace("Created consumer thread for customer {}", customer.getName());
             return new CustomerSessionStatus(customerSession, false);
         }

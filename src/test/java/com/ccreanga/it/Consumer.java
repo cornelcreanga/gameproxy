@@ -37,7 +37,7 @@ public class Consumer implements Runnable {
         try{
             socket = new Socket(ip, port);
 
-            socket.setSoTimeout(50000);
+            socket.setSoTimeout(500000);
             OutputStream out = socket.getOutputStream();
             InputStream in = socket.getInputStream();
             MessageIO.serializeClientMsg(new LoginMsg(name),out);
@@ -49,12 +49,12 @@ public class Consumer implements Runnable {
                 throw new RuntimeException("expecting InfoMsg, found "+serverMsg.getClass());
             }
             InfoMsg infoMsg = (InfoMsg)serverMsg;
-            if (infoMsg.getCode()==120)
+            if (infoMsg.getCode()==InfoMsg.UNAUTHORIZED)
                 throw new RuntimeException("login failed ");
-            if (infoMsg.getCode()==110){
+            if (infoMsg.getCode()==InfoMsg.ALREADY_AUTHENTICATED){
                 System.out.println("already authenticated");
             }
-            if ((infoMsg.getCode()!=110) && (infoMsg.getCode()!=100)){
+            if ((infoMsg.getCode()!=InfoMsg.ALREADY_AUTHENTICATED) && (infoMsg.getCode()!=InfoMsg.AUTHORIZED)){
                 throw new RuntimeException("unknown type "+infoMsg.getCode());
             }
 
@@ -77,6 +77,7 @@ public class Consumer implements Runnable {
 
 
         }catch (Exception e){
+            System.out.println(name);
             e.printStackTrace();
         }
     }
@@ -84,7 +85,7 @@ public class Consumer implements Runnable {
     public synchronized void stop() {
         isStopped = true;
         try {
-            MessageIO.serializeClientMsg(new LogoutMsg(name),socket.getOutputStream());
+            MessageIO.serializeClientMsg(new LogoutMsg(),socket.getOutputStream());
             //todo investigate
             socket.close();
             //IOUtil.closeSocketPreventingReset(socket);

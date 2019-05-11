@@ -72,7 +72,7 @@ public class LoginHandler {
         } catch (Exception e) {
             throw new RuntimeException(e);//todo
 
-    } finally {
+        } finally {
             customerLock.unlock();
         }
     }

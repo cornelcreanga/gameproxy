@@ -1,5 +1,6 @@
 package com.ccreanga.gameproxy.outgoing.realtime;
 
+import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
 import java.net.Socket;
@@ -18,8 +19,8 @@ public class RealtimeSender {
     private ExecutorService service = new ThreadPoolExecutor(16, 64, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
     private Map<Customer, RealtimeWriter> writers = new ConcurrentHashMap<>();
 
-    public void createConsumer(Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
-        RealtimeWriter outgoingWriter = new RealtimeWriter(customer, socket, messages);
+    public void createConsumer(CurrentSession session,Customer customer, Socket socket, BlockingQueue<ServerMsg> messages) {
+        RealtimeWriter outgoingWriter = new RealtimeWriter(session,customer, socket, messages);
         writers.put(customer, outgoingWriter);
         service.submit(outgoingWriter);
     }

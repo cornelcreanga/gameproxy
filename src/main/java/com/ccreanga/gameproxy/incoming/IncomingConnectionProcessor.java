@@ -43,13 +43,16 @@ public class IncomingConnectionProcessor {
                 int type = input.read();
                 switch(type){
                     case IncomingMsg.MATCH: message = MatchMsg.readExternal(input);break;
+                    case -1:
                     case IncomingMsg.STOP: message = StopMsg.readExternal(input);break;
                     default:throw new RuntimeException("unknown message type "+type);
                 }
             }catch (EOFException e){
                 return;
             }
-            log.trace("IncomingMessage " + message.toString());
+            if (log.isTraceEnabled()) {
+                log.trace("IncomingMessage {}",message.toString());
+            }
             if (message instanceof StopMsg)
                 return;
 
@@ -71,7 +74,7 @@ public class IncomingConnectionProcessor {
                             log.trace("Add message to queue");
                             queue.add(new DataMsg((MatchMsg)message));
                         } catch (IllegalStateException e) {
-                            //todo - queue is full, handle this case
+                            log.warn(e.getMessage());//todo
                         }
                     }
                 }

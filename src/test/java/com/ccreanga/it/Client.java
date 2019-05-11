@@ -28,7 +28,7 @@ public class Client {
         this.name = name;
         try {
             socket = new Socket(ip, port);
-            socket.setSoTimeout(50000);
+            socket.setSoTimeout(2000);
             out = socket.getOutputStream();
             in = socket.getInputStream();
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class Client {
 
     public void logout() {
         try {
-            MessageIO.serializeClientMsg(new LogoutMsg(name),out);
+            MessageIO.serializeClientMsg(new LogoutMsg(),out);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

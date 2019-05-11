@@ -54,6 +54,7 @@ public class HistoryConnectionProcessor {
                     }
                     break;
                 }
+                case -1://socket close, logout
                 case LOGOUT:{
                     logoutHandler.handle(socket,customer,(LogoutMsg)msg);
                     break;
@@ -76,10 +77,6 @@ public class HistoryConnectionProcessor {
                         historyHandler.handle(customer.getName(),socket,message);
                         return;//close connection
                     }
-                }
-                //socket close
-                case -1: {
-                    return;
                 }
                 default:{
                     throw new MalformedException("invalid message type " + msg.getType(), "BAD_MESSAGE_TYPE");

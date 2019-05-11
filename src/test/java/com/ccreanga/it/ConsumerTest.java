@@ -30,7 +30,7 @@ public class ConsumerTest {
         serverMsg = (InfoMsg)MessageIO.deSerializeServerMsg(socket.getInputStream()).get();
         assertEquals(serverMsg.getCode(), ALREADY_AUTHENTICATED);
 
-        MessageIO.serializeClientMsg(new LogoutMsg("test1"),socket.getOutputStream());
+        MessageIO.serializeClientMsg(new LogoutMsg(),socket.getOutputStream());
     }
 
     @Test

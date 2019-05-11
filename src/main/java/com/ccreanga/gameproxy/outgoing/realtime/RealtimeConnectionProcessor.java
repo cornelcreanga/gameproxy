@@ -52,6 +52,7 @@ public class RealtimeConnectionProcessor {
                     }
                     break;
                 }
+                case -1:
                 case LOGOUT:{
                     logoutHandler.handle(socket,customer,(LogoutMsg) msg);
                     break;

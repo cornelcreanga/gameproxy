@@ -1,13 +1,13 @@
 package com.ccreanga.gameproxy.outgoing.realtime;
 
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.LOGIN;
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.LOGOUT;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGIN;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGOUT;
 
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.outgoing.handlers.LoginHandler;
 import com.ccreanga.gameproxy.outgoing.handlers.LogoutHandler;
-import com.ccreanga.gameproxy.outgoing.message.MessageIO;
-import com.ccreanga.gameproxy.outgoing.message.client.*;
+import com.ccreanga.protocol.outgoing.MessageIO;
+import com.ccreanga.protocol.outgoing.client.*;
 import com.google.common.util.concurrent.Striped;
 
 import java.io.InputStream;

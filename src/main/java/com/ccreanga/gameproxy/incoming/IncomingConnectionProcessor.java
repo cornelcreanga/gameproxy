@@ -5,8 +5,11 @@ import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.CustomerSession;
 import com.ccreanga.gameproxy.MessageDispatcher;
 import com.ccreanga.gameproxy.kafka.KafkaMessageProducer;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+import com.ccreanga.protocol.incoming.IncomingMsg;
+import com.ccreanga.protocol.incoming.MatchMsg;
+import com.ccreanga.protocol.incoming.StopMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.ServerMsg;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -61,7 +64,8 @@ public class IncomingConnectionProcessor {
                 log.trace("Customers that are registered for this message {}", Arrays.toString(customers.toArray()));
             }
             for (Customer customer : customers) {
-                kafkaMessageProducer.sendAsynchToKafka(customer.getName(), (MatchMsg)message);
+                //todo -comment for the moment
+//                kafkaMessageProducer.sendAsynchToKafka(customer.getName(), (MatchMsg)message);
                 CustomerSession customerSession = currentSession.getCustomerSession(customer);
                 if (customerSession == null) {
                     log.trace("Customer {} is offline", customer.getName());

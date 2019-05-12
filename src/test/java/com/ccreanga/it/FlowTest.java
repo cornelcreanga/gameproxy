@@ -2,7 +2,7 @@ package com.ccreanga.it;
 
 import static org.junit.Assert.assertEquals;
 
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

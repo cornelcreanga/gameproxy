@@ -2,10 +2,10 @@ package com.ccreanga.it;
 
 import static org.junit.Assert.assertEquals;
 
-import com.ccreanga.gameproxy.outgoing.message.server.DataEndMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+import com.ccreanga.protocol.outgoing.server.DataEndMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.InfoMsg;
+import com.ccreanga.protocol.outgoing.server.ServerMsg;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.HashMap;

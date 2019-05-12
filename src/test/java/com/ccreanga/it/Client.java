@@ -2,13 +2,13 @@ package com.ccreanga.it;
 
 import static org.junit.Assert.assertEquals;
 
-import com.ccreanga.gameproxy.outgoing.message.client.HistoryDataMsg;
-import com.ccreanga.gameproxy.outgoing.message.client.LoginMsg;
-import com.ccreanga.gameproxy.outgoing.message.client.LogoutMsg;
-import com.ccreanga.gameproxy.outgoing.message.MessageIO;
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+import com.ccreanga.protocol.outgoing.MessageIO;
+import com.ccreanga.protocol.outgoing.client.HistoryDataMsg;
+import com.ccreanga.protocol.outgoing.client.LoginMsg;
+import com.ccreanga.protocol.outgoing.client.LogoutMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.InfoMsg;
+import com.ccreanga.protocol.outgoing.server.ServerMsg;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -1,7 +1,7 @@
 package com.ccreanga.gameproxy.outgoing.handlers;
 
 import com.ccreanga.gameproxy.kafka.KafkaMessageConsumer;
-import com.ccreanga.gameproxy.outgoing.message.client.HistoryDataMsg;
+import com.ccreanga.protocol.outgoing.client.HistoryDataMsg;
 import com.ccreanga.gameproxy.util.IOUtil;
 import java.io.IOException;
 import java.net.Socket;

@@ -22,12 +22,15 @@ apply plugin: 'io.spring.dependency-management'
 
 
 bootJar {
-    baseName = 'realtime'
+    baseName = 'realtime-dispatcher'
     version '1.0-SNAPSHOT'
 }
 
 repositories {
     mavenCentral()
+}
+repositories {
+    mavenLocal()
 }
 
 group 'com.ccreanga'
@@ -37,6 +40,8 @@ sourceCompatibility = 1.11
 dependencies {
     testCompile group:'junit',name:'junit',version:'4.12'
     testCompile group:'org.springframework.boot',name:'spring-boot-starter-test',version:springVersion
+
+    compile group:'com.ccreanga',name:'protocol-dispatcher',version:'1.0-SNAPSHOT'
 
     compile group:'org.apache.kafka',name:'kafka-clients',version:kafkaClientsVersion
     compile group:'ch.qos.logback',name:'logback-classic',version:logbackVersion

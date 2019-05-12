@@ -1,6 +1,6 @@
 package com.ccreanga.gameproxy.kafka;
 
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
 import com.ccreanga.gameproxy.util.IOUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.ccreanga.it;
 
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
 import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.List;

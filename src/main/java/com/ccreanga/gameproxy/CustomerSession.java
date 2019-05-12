@@ -1,6 +1,6 @@
 package com.ccreanga.gameproxy;
 
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+import com.ccreanga.protocol.outgoing.server.ServerMsg;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import lombok.AllArgsConstructor;

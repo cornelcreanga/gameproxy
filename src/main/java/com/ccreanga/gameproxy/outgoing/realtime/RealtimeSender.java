@@ -2,7 +2,7 @@ package com.ccreanga.gameproxy.outgoing.realtime;
 
 import com.ccreanga.gameproxy.CurrentSession;
 import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.outgoing.message.server.ServerMsg;
+import com.ccreanga.protocol.outgoing.server.ServerMsg;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;

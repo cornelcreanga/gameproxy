@@ -1,18 +1,18 @@
 package com.ccreanga.gameproxy.outgoing.history;
 
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.LOGIN;
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.LOGOUT;
-import static com.ccreanga.gameproxy.outgoing.message.client.ClientMsg.HISTORICAL_DATA;
-import static com.ccreanga.gameproxy.outgoing.message.server.InfoMsg.HISTORY_ALREADY_STARTED;
-import static com.ccreanga.gameproxy.outgoing.message.server.InfoMsg.HISTORY_BAD_INTERVAL;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGIN;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGOUT;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.HISTORICAL_DATA;
+import static com.ccreanga.protocol.outgoing.server.InfoMsg.HISTORY_ALREADY_STARTED;
+import static com.ccreanga.protocol.outgoing.server.InfoMsg.HISTORY_BAD_INTERVAL;
 
 import com.ccreanga.gameproxy.Customer;
 import com.ccreanga.gameproxy.outgoing.handlers.HistoryHandler;
 import com.ccreanga.gameproxy.outgoing.handlers.LoginHandler;
 import com.ccreanga.gameproxy.outgoing.handlers.LogoutHandler;
-import com.ccreanga.gameproxy.outgoing.message.MessageIO;
-import com.ccreanga.gameproxy.outgoing.message.client.*;
-import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
+import com.ccreanga.protocol.outgoing.MessageIO;
+import com.ccreanga.protocol.outgoing.client.*;
+import com.ccreanga.protocol.outgoing.server.InfoMsg;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -1,8 +1,8 @@
 package com.ccreanga.it;
 
-import com.ccreanga.gameproxy.incoming.IncomingMsg;
-import com.ccreanga.gameproxy.incoming.MatchMsg;
-import com.ccreanga.gameproxy.incoming.StopMsg;
+import com.ccreanga.protocol.incoming.IncomingMsg;
+import com.ccreanga.protocol.incoming.MatchMsg;
+import com.ccreanga.protocol.incoming.StopMsg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

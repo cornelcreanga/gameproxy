@@ -1,7 +1,7 @@
 package com.ccreanga.it;
 
-import com.ccreanga.gameproxy.outgoing.message.server.DataMsg;
-import com.ccreanga.gameproxy.outgoing.message.server.InfoMsg;
+import com.ccreanga.protocol.outgoing.server.DataMsg;
+import com.ccreanga.protocol.outgoing.server.InfoMsg;
 import com.ccreanga.it.Consumer.DataMsgHandler;
 import com.ccreanga.it.Consumer.InfoMsgHandler;
 import java.util.ArrayList;

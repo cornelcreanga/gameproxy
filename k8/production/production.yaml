@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: prealtime-dispatcher-production
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: realtime-dispatcher
+      labels:
+        app: realtime-dispatcher
+        env: production
+    spec:
+      containers:
+      - name: infrastructure
+        image: gcr.io/cloud-solutions-images/realtime-dispatcher:1.0.0
+        resources:
+          limits:
+            memory: "4000Mi"
+            cpu: "100m"
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+        command: ["sh", "-c", "java -jar app.jar --server.port=8080"]
+
+
+
+
+
+
+
+
+
+
+
+
+

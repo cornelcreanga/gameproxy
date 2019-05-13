@@ -1,0 +1,11 @@
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: default
+spec:
+  hard:
+    memory: 4Gi
+    cpu: 2
+    pods: 2
+    services: 2
+    resourcequotas: 1

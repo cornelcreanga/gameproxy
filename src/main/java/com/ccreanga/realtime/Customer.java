@@ -1,18 +1,14 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.TreeSet;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Value;
 
-import java.util.List;
-
- @Getter
- @Setter
-public class Customer{
+@Getter
+@Setter
+public class Customer {
     private String name;
     private long[] matches;
     private int hashCode;
@@ -23,11 +19,11 @@ public class Customer{
         hashCode = Objects.hash(name);
     }
 
-    public boolean hasMatch(long match){
-        if (matches.length==1){
-            return matches[0]==match;
+    public boolean hasMatch(long match) {
+        if (matches.length == 1) {
+            return matches[0] == match;
         }
-        return Arrays.binarySearch(matches,match)!=-1;
+        return Arrays.binarySearch(matches, match) != -1;
     }
 
     @Override

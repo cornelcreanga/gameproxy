@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy.gateway;
+package com.ccreanga.realtime.gateway;
 
 import java.util.List;
 

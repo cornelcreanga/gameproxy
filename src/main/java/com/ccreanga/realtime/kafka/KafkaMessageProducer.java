@@ -1,8 +1,6 @@
-package com.ccreanga.gameproxy.kafka;
+package com.ccreanga.realtime.kafka;
 
 import com.ccreanga.protocol.incoming.MatchMsg;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,6 +10,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 @Component
 @Slf4j

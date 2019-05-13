@@ -1,12 +1,13 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
 
-import com.ccreanga.gameproxy.gateway.CustomerStorage;
 import com.ccreanga.protocol.incoming.MatchMsg;
+import com.ccreanga.realtime.gateway.CustomerStorage;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Set;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the dispatching rules - what customers are going to receive a particular message
@@ -21,7 +22,7 @@ public class MessageDispatcher {
     public MessageDispatcher(CustomerStorage customerStorage) {
         this.customerStorage = customerStorage;
         Set<Customer> customers = customerStorage.getCustomers();
-        customers.forEach(c->{
+        customers.forEach(c -> {
             long[] m = c.getMatches();
             for (long l : m) {
                 customerForDispatch.put(l, c);

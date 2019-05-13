@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
 
 import lombok.AllArgsConstructor;
 

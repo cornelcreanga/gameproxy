@@ -1,4 +1,4 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +13,5 @@ public class ServerConfig {
 
     @Value("${serverConfig.realtime.port}")
     private int realtimePort;
-
-    @Value("${serverConfig.history.port}")
-    private int historyPort;
-
 
 }

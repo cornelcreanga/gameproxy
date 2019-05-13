@@ -1,19 +1,14 @@
-package com.ccreanga.gameproxy.outgoing.handlers;
+package com.ccreanga.realtime.outgoing.handlers;
 
-import com.ccreanga.gameproxy.CurrentSession;
-import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.gateway.CustomerStorage;
-import com.ccreanga.protocol.outgoing.client.LoginMsg;
 import com.ccreanga.protocol.outgoing.client.LogoutMsg;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Optional;
+import com.ccreanga.realtime.CurrentSession;
+import com.ccreanga.realtime.Customer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.net.Socket;
 
 @Slf4j
 @Component
@@ -25,7 +20,7 @@ public class LogoutHandler {
 
     public void handle(Socket socket, Customer customer, LogoutMsg message) throws IOException {
 
-        if (customer==null) {//ignore
+        if (customer == null) {//ignore
             log.warn("no customer logged in for this connection, can't logout");
         } else {
             currentSession.logout(customer);

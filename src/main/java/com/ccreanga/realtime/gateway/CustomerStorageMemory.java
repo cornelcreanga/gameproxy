@@ -1,13 +1,11 @@
-package com.ccreanga.gameproxy.gateway;
+package com.ccreanga.realtime.gateway;
 
-import com.ccreanga.gameproxy.Customer;
-import java.util.HashSet;
-import java.util.TreeSet;
+import com.ccreanga.realtime.Customer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -31,12 +29,12 @@ public class CustomerStorageMemory implements CustomerStorage {
     }
 
     @PostConstruct
-    private void init(){
-        set.add(new Customer("test1", new long[]{1,2}));
-        set.add(new Customer("test2", new long[]{1,2,3,4,5}));
+    private void init() {
+        set.add(new Customer("test1", new long[]{1, 2}));
+        set.add(new Customer("test2", new long[]{1, 2, 3, 4, 5}));
         set.add(new Customer("test3", new long[]{1}));
-        set.add(new Customer("test4", new long[]{1,2,3}));
-        set.add(new Customer("test5", new long[]{1,2,3,4,5}));
+        set.add(new Customer("test4", new long[]{1, 2, 3}));
+        set.add(new Customer("test5", new long[]{1, 2, 3, 4, 5}));
     }
 
 

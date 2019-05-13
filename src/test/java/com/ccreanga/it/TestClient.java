@@ -10,7 +10,7 @@ import java.util.UUID;
 public class TestClient {
 
     public static void main(String[] args) throws Exception{
-        int c = 1;
+        int c = 2;
         Consumer[] consumers = new Consumer[c];
         for (int i = 0; i < c; i++) {
             Consumer consumer = new Consumer("test" + (i + 1), "127.0.0.1", 8082, new SimpleDataMsgHandler("test" + (i + 1)) , new SimpleInfoMsgHandler());

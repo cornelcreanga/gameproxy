@@ -1,13 +1,13 @@
-package com.ccreanga.gameproxy.incoming;
+package com.ccreanga.realtime.incoming;
 
-import com.ccreanga.gameproxy.ServerConfig;
-import com.ccreanga.gameproxy.util.IOUtil;
+import com.ccreanga.realtime.ServerConfig;
+import com.ccreanga.realtime.util.IOUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -39,9 +39,8 @@ public class IncomingServer implements Runnable {
                     incomingConnectionProcessor.handleConnection(socket);
                 } catch (IOException e) {
                     String message = e.getMessage();
-                    if  ((message==null) || (!message.equals("Connection reset"))) {
-                        e.printStackTrace();
-                    }
+                    log.warn("ioexception",e);//todo
+
                 } finally {
                     IOUtil.closeSocketPreventingReset(socket);
                 }

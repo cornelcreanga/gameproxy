@@ -19,8 +19,6 @@ serverConfig:
     port: 8081
   realtime:
     port: 8082
-  history:
-    port: 8083
 
 logging:
   pattern:

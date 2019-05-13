@@ -1,14 +1,18 @@
-package com.ccreanga.gameproxy.outgoing.handlers;
+package com.ccreanga.realtime.outgoing.handlers;
 
 
-import com.ccreanga.gameproxy.CurrentSession;
-import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.CustomerSessionStatus;
-import com.ccreanga.gameproxy.gateway.CustomerStorage;
 import com.ccreanga.protocol.outgoing.MessageIO;
 import com.ccreanga.protocol.outgoing.client.LoginMsg;
 import com.ccreanga.protocol.outgoing.server.InfoMsg;
+import com.ccreanga.realtime.CurrentSession;
+import com.ccreanga.realtime.Customer;
+import com.ccreanga.realtime.CustomerSessionStatus;
+import com.ccreanga.realtime.gateway.CustomerStorage;
 import com.google.common.util.concurrent.Striped;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,9 +21,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 
 @Slf4j
@@ -33,12 +34,11 @@ public class LoginHandler {
 
     private CurrentSession currentSession;
 
-    public Optional<Customer> handle(Socket socket,LoginMsg message) throws IOException {
+    public Optional<Customer> handle(Socket socket, LoginMsg message) throws IOException {
 
         Customer customer;
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
-
 
 
         InfoMsg resultMessage;
@@ -53,7 +53,7 @@ public class LoginHandler {
             Optional<Customer> optional = customers.stream().filter(c -> c.getName().equals(name)).findAny();
             if (optional.isEmpty()) {
                 log.info("Not authorized");
-                MessageIO.serializeServerMsg(new InfoMsg(InfoMsg.UNAUTHORIZED),out);
+                MessageIO.serializeServerMsg(new InfoMsg(InfoMsg.UNAUTHORIZED), out);
                 return Optional.empty();
             }
             customer = optional.get();
@@ -66,7 +66,7 @@ public class LoginHandler {
                 resultMessage = new InfoMsg(InfoMsg.AUTHORIZED);
             }
 
-            MessageIO.serializeServerMsg(resultMessage,out);
+            MessageIO.serializeServerMsg(resultMessage, out);
             return optional;
         } catch (Exception e) {
             throw new RuntimeException(e);//todo

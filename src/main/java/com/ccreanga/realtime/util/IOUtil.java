@@ -1,11 +1,6 @@
-package com.ccreanga.gameproxy.util;
+package com.ccreanga.realtime.util;
 
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.time.Instant;

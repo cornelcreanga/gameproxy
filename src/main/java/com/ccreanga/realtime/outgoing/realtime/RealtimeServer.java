@@ -1,19 +1,15 @@
-package com.ccreanga.gameproxy.outgoing.realtime;
+package com.ccreanga.realtime.outgoing.realtime;
 
-import com.ccreanga.gameproxy.ServerConfig;
-import com.ccreanga.gameproxy.util.IOUtil;
+import com.ccreanga.realtime.ServerConfig;
+import com.ccreanga.realtime.util.IOUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.util.concurrent.*;
 
 @Component
 @Slf4j
@@ -34,11 +30,11 @@ public class RealtimeServer implements Runnable {
 
     public void run() {
         ExecutorService threadPool = new ThreadPoolExecutor(
-            64,
-            128,
-            60,
-            TimeUnit.SECONDS,
-            new ArrayBlockingQueue<>(128));
+                64,
+                128,
+                60,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(128));
 
         try {
             serverSocket = new ServerSocket(serverConfig.getRealtimePort());

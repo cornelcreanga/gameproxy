@@ -1,23 +1,26 @@
-package com.ccreanga.gameproxy.outgoing.realtime;
+package com.ccreanga.realtime.outgoing.realtime;
 
-import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGIN;
-import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGOUT;
-
-import com.ccreanga.gameproxy.Customer;
-import com.ccreanga.gameproxy.outgoing.handlers.LoginHandler;
-import com.ccreanga.gameproxy.outgoing.handlers.LogoutHandler;
+import com.ccreanga.protocol.AuthorizationException;
+import com.ccreanga.protocol.MalformedException;
 import com.ccreanga.protocol.outgoing.MessageIO;
 import com.ccreanga.protocol.outgoing.client.*;
+import com.ccreanga.realtime.Customer;
+import com.ccreanga.realtime.outgoing.handlers.LoginHandler;
+import com.ccreanga.realtime.outgoing.handlers.LogoutHandler;
 import com.google.common.util.concurrent.Striped;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGIN;
+import static com.ccreanga.protocol.outgoing.client.ClientMsg.LOGOUT;
 
 @Component
 @Slf4j
@@ -30,31 +33,28 @@ public class RealtimeConnectionProcessor {
     private LogoutHandler logoutHandler;
 
 
-    public void handleConnection(Socket socket) throws Exception {
+    public void handleConnection(Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
         Customer customer = null;
         //add it to register section
         while (true) {
             Optional<ClientMsg> optional = MessageIO.deSerializeClientMsg(in);
-            if (optional.isEmpty()){
+            if (optional.isEmpty()) {
                 return;
             }
             ClientMsg msg = optional.get();
-            log.trace("message type {}",msg.getType());
+            log.trace("message type {}", msg.getType());
             switch (msg.getType()) {
-                case LOGIN:{
-                    Optional<Customer> optionalCustomer = loginHandler.handle(socket,(LoginMsg) msg);
+                case LOGIN: {
+                    Optional<Customer> optionalCustomer = loginHandler.handle(socket, (LoginMsg) msg);
                     if (optionalCustomer.isPresent())
                         customer = optionalCustomer.get();
-                    else{
-                        throw new AuthorizationException();//todo
-                    }
                     break;
                 }
-                case -1:
-                case LOGOUT:{
-                    logoutHandler.handle(socket,customer,(LogoutMsg) msg);
+                case -1:log.warn("socket close for customer {}",customer);
+                case LOGOUT: {
+                    logoutHandler.handle(socket, customer, (LogoutMsg) msg);
                     break;
                 }
                 default: {
@@ -62,7 +62,6 @@ public class RealtimeConnectionProcessor {
                     throw new MalformedException("invalid message type " + msg.getType(), "BAD_MESSAGE_TYPE");
                 }
             }
-            out.flush();
 
         }
     }

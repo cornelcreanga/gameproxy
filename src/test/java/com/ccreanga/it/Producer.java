@@ -42,7 +42,6 @@ public class Producer {
         StopMsg stopMsg = new StopMsg();
         out.write(IncomingMsg.STOP);
         stopMsg.writeExternal(out);
-        out.flush();
     }
 
 }

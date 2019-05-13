@@ -1,11 +1,12 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
 
 import com.ccreanga.protocol.outgoing.server.ServerMsg;
-import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 
 @Data
 @NoArgsConstructor

@@ -1,14 +1,14 @@
-package com.ccreanga.gameproxy;
+package com.ccreanga.realtime;
 
-import com.ccreanga.gameproxy.outgoing.realtime.RealtimeSender;
+import com.ccreanga.realtime.outgoing.realtime.RealtimeSender;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.net.Socket;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -16,7 +16,7 @@ public class CurrentSession {
 
     private final RealtimeSender outgoingSender;
 
-    private Map<Customer,CustomerSession> customerSessions = new ConcurrentHashMap<>();
+    private Map<Customer, CustomerSession> customerSessions = new ConcurrentHashMap<>();
 
     public CurrentSession(RealtimeSender outgoingSender) {
         this.outgoingSender = outgoingSender;
@@ -28,18 +28,18 @@ public class CurrentSession {
         if (customerSession != null) {
             return new CustomerSessionStatus(customerSession, true);
         } else {
-            outgoingSender.createConsumer(this,customer, socket, newSession.getMessageQueues());
+            outgoingSender.createConsumer(this, customer, socket, newSession.getMessageQueues());
             log.trace("Created consumer thread for customer {}", customer.getName());
             return new CustomerSessionStatus(customerSession, false);
         }
     }
 
-    public void logout(Customer customer){
+    public void logout(Customer customer) {
         log.info("Customer name={} logout", customer.getName());
         customerSessions.remove(customer);
     }
 
-    public CustomerSession getCustomerSession(Customer customer){
+    public CustomerSession getCustomerSession(Customer customer) {
         return customerSessions.get(customer);
     }
 

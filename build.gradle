@@ -45,8 +45,9 @@ dependencies {
     compile group:'org.apache.kafka',name:'kafka-clients',version:kafkaClientsVersion
     compile group:'ch.qos.logback',name:'logback-classic',version:logbackVersion
     compile group:'org.springframework.boot',name:'spring-boot-starter',version:springVersion
-    compile group: 'org.springframework.kafka', name: 'spring-kafka', version:springKafkaVersion
-    compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+    compile group:'org.springframework.boot',name:'spring-boot-starter-web',version:springVersion
+    compile group:'org.springframework.kafka', name: 'spring-kafka', version:springKafkaVersion
+    compile group:'com.google.guava', name: 'guava', version: guavaVersion
     compileOnly group:'org.projectlombok',name:'lombok',version:lombokVersion
     annotationProcessor group:'org.projectlombok',name:'lombok',version:lombokVersion
 }

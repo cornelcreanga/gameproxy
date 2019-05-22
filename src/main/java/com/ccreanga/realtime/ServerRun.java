@@ -22,7 +22,7 @@ public class ServerRun implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Thread thread1 = new Thread(incomingServer);
         thread1.start();
         Thread thread2 = new Thread(realtimeServer);

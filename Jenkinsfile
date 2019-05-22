@@ -38,15 +38,27 @@ spec:
 }
   }
   stages {
-    stage('Build and push image with Container Builder') {
+    stage('Build and push production image with Container Builder') {
+      when { branch 'master' }
       steps {
         container('gcloud') {
-          sh "gcloud builds submit --config=cloudbuild.yaml --substitutions=TAG_NAME='${imageTag}' ."
-          //sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${imageTag} ."
+          sh "gcloud builds submit --config=cloudbuild.yaml --substitutions=TAG_NAME='${imageTag}',PROFILE=prod ."
         }
       }
     }
-    stage('Deploy Production') {
+    stage('Build and push dev image with Container Builder') {
+      when {
+        not { branch 'master' }
+      }
+      steps {
+        container('gcloud') {
+          sh "gcloud builds submit --config=cloudbuild.yaml --substitutions=TAG_NAME='${imageTag}',PROFILE=dev  ."
+        }
+      }
+    }
+
+
+    stage('Deploy production') {
       // Production branch
       when { branch 'master' }
       steps{
@@ -59,11 +71,10 @@ spec:
         }
       }
     }
-    stage('Deploy Dev') {
+    stage('Deploy dev') {
       // Developer Branches
       when {
         not { branch 'master' }
-        not { branch 'canary' }
       }
       steps {
         container('kubectl') {
